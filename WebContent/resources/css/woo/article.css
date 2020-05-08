@@ -1,0 +1,310 @@
+/* ////////////////////////////게시글 상세///////////////////////////////// */
+
+/* 게시판 헤더 */
+.sol-article-header {
+    border-bottom: 1px solid black;
+    padding: 0rem 1rem;
+    margin: 5rem 0 1rem 0;
+}
+
+/* 게시판 헤더 및 댓글 유저 프로필 사진 */
+.sol-user img,
+.sol-reply-container img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 1.25rem;
+}
+
+/* 게시글 좋아요 */
+.sol-article-etc .fa-heart {
+    color: red;
+}
+
+/* 댓글 부분 */
+.sol-reply-container {
+    background-color: #F2F2F2;
+}
+
+/* 게시글 상세보기 탑버튼 */
+.sol-to-the-top {
+    position: fixed;
+    bottom: 3rem;
+    right: 3rem;
+    font-size: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    line-height: 3rem;
+    border: 0;
+    border-radius: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.sol-to-the-top:hover {
+    cursor: pointer;
+}
+
+/* 게시글 하단 부분 신고 버튼  */
+.sol-article-etc:hover {
+    cursor: pointer;
+}
+
+/* 댓글 오른쪽 부분 */
+small.text-muted:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 576px) {
+    .sol-to-the-top {
+        position: fixed;
+        bottom: 3rem;
+        right: .5rem;
+        font-size: 1rem;
+        width: 2rem;
+        height: 2rem;
+        text-align: center;
+        line-height: 2rem;
+        border: 0;
+        border-radius: 2rem;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+}
+
+
+
+
+
+
+
+
+
+/* 사진게시판 이미지 크기 지정 */
+.sol-image-frame img {
+    width: auto;
+    max-height: 50rem;
+
+}
+
+.modal .sol-image-frame img {
+    width: auto;
+    height: 30rem;
+
+}
+
+/* ////////////////////////////게시글 상세///////////////////////////////// */
+
+
+
+
+
+
+
+
+/* ////////////////////////////자유게시판 목록///////////////////////////////// */
+/* 게시판 헤더 */
+.sol-board-header {
+    border-bottom: 1px solid black;
+    padding: 1rem 1rem;
+    margin: 5rem 0 5rem 0;
+}
+
+/*게시판 테이블 헤더*/
+.sol-article-table thead > tr {
+    border-bottom: 2px solid #eee;
+    background-color: #F2F2F2;
+}
+/* .sol-article-table thead th:nth-child(2) {
+    text-align: left;
+} */
+ .sol-article-table thead th {
+    text-align: center;
+} 
+
+/* 테이블 바디 */
+.sol-article-table tbody th:hover {
+    cursor: pointer;
+}
+
+.sol-article-table tr {
+    border-bottom: 1px solid #eee;
+}
+
+.sol-article-table tr:hover {
+    background-color: #F2F2F2;
+}
+
+.sol-article-table td {
+    text-align: center;
+}
+
+
+.bg-basic {
+    background-color: rgba(242, 214, 75, .1);
+
+}
+
+
+
+
+/* 게시판 검색 부분 */
+.search .btn-outline-secondary {
+    border-top-color: #ced4da;
+    border-bottom-color: #ced4da;
+    border-right-color: #ced4da;
+    border-left-color: white;
+}
+
+.search .btn-outline-secondary:hover {
+    border-top-color: #F2B33D;
+    border-bottom-color: #F2B33D;
+    border-right-color: #F2B33D;
+    border-left-color: white;
+    background-color: #F2B33D;
+}
+
+.sol-article-table tbody > tr:last-child > * {
+    padding-bottom: 1.5rem;
+}
+
+/* ////////////////////////////자유게시판 목록///////////////////////////////// */
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ////////////////////////////사진게시판 목록///////////////////////////////// */
+
+
+/* Masonry 그리드 틀 */
+.grid {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Masonry 그리드 세로 크기 조절 */
+.grid-sizer,
+.grid-item {
+    width: 32%;
+}
+
+/* Masonry 그리드 각 아이템 */
+.grid-item {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.grid-item:hover {
+    cursor: pointer;
+}
+
+/* Masonry 그리드 각 아이템 이미지 */
+.grid-item img {
+    display: block;
+    min-width: 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 577px) and (max-width: 1200px) {
+
+    .grid-sizer,
+    .grid-item {
+        width: 48%;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .grid-sizer,
+    .grid-item {
+        width: 100%;
+    }
+}
+
+
+/* 사진게시판 게시글 추가 모달 */
+.sol-add-article {
+    position: fixed;
+    bottom: 7rem;
+    right: 3rem;
+    font-size: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    line-height: 3rem;
+    border: 0;
+    border-radius: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.sol-add-article:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 576px) {
+    .sol-add-article {
+        position: fixed;
+        bottom: 3rem;
+        right: .5rem;
+        font-size: 1rem;
+        width: 2rem;
+        height: 2rem;
+        text-align: center;
+        line-height: 2rem;
+        border: 0;
+        border-radius: 2rem;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+}
+
+
+#sol-image-drag-and-drop {
+    width: 100%;
+    height: 20rem;
+    border: 3px dashed #8C8C8C;
+    border-radius: 8px;
+    transition: all .15s ease-in-out;
+    text-align: center;
+    line-height: 20rem;
+    font-size: 1.2rem;
+    color: gray;
+    background-color: #F2F2F2;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+/* 사진게시판 사진 캡션 */
+.grid-item .sol-image-caption {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+    width: 100%;
+    height: 50%;
+    /*            bottom: -40%;*/
+    top: -60%;
+    position: absolute;
+    left: 0;
+    overflow: auto;
+    padding: 1rem;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    color: #f2f2f2;
+}
+
+.grid-item:hover .sol-image-caption {
+    top: 0;
+}
+
+.sol-image-caption .fa-heart {
+    cursor: pointer;
+}
+
+
+/* ////////////////////////////사진게시판 목록///////////////////////////////// */

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DeliveryMapper">
+ 	
+ 	<resultMap type="purchase" id="deliverySelectMap">
+ 		<result property="purchaseId" 				column="PURCHASE_ID" 		jdbcType="VARCHAR" />
+		<result property="user.userId" 				column="USER_ID" 			jdbcType="VARCHAR" />
+		<result property="hobbyClass.hobbyClassNo" 	column="CLASS_NO" 			jdbcType="NUMERIC" />
+		<result property="hobbyClass.kitName" 		column="KIT_NAME" 			jdbcType="VARCHAR" />
+		<result property="hobbyClass.kitImage" 		column="KIT_IMAGE" 			jdbcType="VARCHAR" />
+		<result property="hobbyClass.kitPrice" 		column="KIT_PRICE" 			jdbcType="NUMERIC" />
+		<result property="dlvyCompany" 				column="DLVY_COMPANY" 		jdbcType="VARCHAR" />
+		<result property="trackingNo" 				column="TRACKING_NO" 		jdbcType="VARCHAR" />
+		<result property="receiverName" 			column="RECEIVER_NAME" 		jdbcType="VARCHAR" />
+		<result property="receiverPhone" 			column="PHONE" 				jdbcType="VARCHAR" />
+		<result property="dlvyAddr" 				column="ADDRESS" 			jdbcType="VARCHAR" />
+		<result property="dlvyDetailAddr" 			column="DETAIL_ADDRESS" 	jdbcType="VARCHAR" />
+		<result property="dlvyPostcode" 			column="POSTCODE" 			jdbcType="VARCHAR" />
+		<result property="dlvyRequest" 				column="DLVY_REQUEST" 		jdbcType="VARCHAR" />
+		<result property="purchasePrice" 			column="PRICE" 				jdbcType="NUMERIC" />
+		<result property="payMethod" 				column="PAY_METHOD" 		jdbcType="CHAR" />
+		<result property="purchaseState" 			column="PURCHASE_CODE" 		jdbcType="CHAR" />
+		<result property="purchaseDate" 			column="PURCHASE_DATE" 		jdbcType="DATE" />
+		<result property="refundDate" 				column="REFUND_DATE" 		jdbcType="DATE" />
+		<result property="componentOption" 			column="COMPONENT_OPTION" 	jdbcType="CHAR" />
+	
+ 	</resultMap>
+ 	
+ 	<select id="getDeliveryInfo" parameterType="string" resultMap="deliverySelectMap">
+ 		
+ 		SELECT p.purchase_id, p.receiver_name, p.phone, p.address, p.detail_address, p.postcode, p.dlvy_request, p.dlvy_company, p.tracking_no, hc.kit_name, hc.kit_image
+		FROM purchase p, hobbyclass hc
+		WHERE p.class_no = hc.class_no
+		      AND p.purchase_id = #{purchaseId}
+ 	
+ 	</select>
+ 	
+ 	<update id="addDeliveryInfo" parameterType="purchase" >
+ 		UPDATE purchase
+		SET dlvy_company = #{dlvyCompany},
+		    tracking_no = #{trackingNo},
+		    purchase_code = '1'
+		WHERE purchase_id = #{purchaseId}
+ 	</update>
+ 	
+ 	
+ 	
+ 	
+</mapper>

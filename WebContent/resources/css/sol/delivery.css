@@ -1,0 +1,10 @@
+/* ////////////////////////////////////////// 배달 정보 추가 모달 select2 ////////////////////////////////////////// */
+
+.select2.select2-container .select2-selection{
+	height: 2.5rem;
+	padding-top: .4rem;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+	top: 70%;
+} 

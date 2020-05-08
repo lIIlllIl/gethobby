@@ -1,0 +1,676 @@
+@media (max-width: 640px) {
+  	
+  		.component-option-div {
+  		width: 100%;
+  		height: auto;
+  		padding: 24px;
+  		background-color: rgb(255, 255, 255);
+  		margin: auto;
+  		}
+  	}
+	@media (min-width: 641px) {
+	
+		.component-option-div {
+  		width: 640px;
+  		height: 708px;
+  		padding: 24px;
+  		background-color: rgb(255, 255, 255);
+  		margin: auto;		
+  		}
+	}
+  	.free-delivery-info-div {
+  		width: 100%;
+  		height: 76px;
+  		padding: 16px;
+  		margin: 0px 0px 16px;
+  		background-color: rgb(248, 248, 249);
+  	}
+  	.set-select-div {
+  		width: 100%;
+  		padding: 20px;
+  	}
+  	.single-select-div {
+  		width: 100%;
+  		padding: 20px;
+  	}
+  	.set-select-title {
+  		font-size: 18px;
+  		color: rgb(62, 64, 66);
+  		line-height: 24px;
+  		letter-spacing: -0.01em;
+  		display: flex;
+  		font-weight: bold;
+    	margin: 0px 0px 12px;
+    	padding: 0px;
+  	}
+  	.all-free-delivery-title {
+  		font-size: 14px;
+	    color: rgb(62, 64, 66);
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    font-weight: bold;
+	    display: inline-flex;
+	    -webkit-box-align: center;
+	    align-items: center;
+	    margin: 0px 0px 8px;
+  	}
+  	.all-free-delivery-info {
+  		font-size: 11px;
+	    font-weight: normal;
+	    color: rgb(62, 64, 66);
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    margin: 0px;
+  	}
+  	.select-page-title {
+  		font-size: 24px;
+	    font-weight: bold;
+	    color: rgb(62, 64, 66);
+	    line-height: 32px;
+	    letter-spacing: -0.4px;
+	    margin: 0px 0px 16px;
+	    padding: 0px;
+  	}
+  	.select-div-up-box {
+  		min-width: 20px;
+	    height: 20px;
+	    display: inline-flex;
+	    -webkit-box-pack: center;
+	    justify-content: center;
+	    -webkit-box-align: center;
+	    align-items: center;
+	    background-color: rgb(243, 51, 64);
+	    box-sizing: border-box;
+	    border-radius: 3px;
+	    flex: 0 0 auto;
+	    padding: 0px 6px;
+	    margin-right: 4px;
+   		margin-bottom: 8px;
+  	}
+  	::selection {
+	    background-color: rgb(255, 89, 70) !important;
+	    color: rgb(255, 255, 255) !important;
+	}
+	.select-div-up-content {
+		font-size: 9px;
+	    letter-spacing: normal;
+	    display: flex;
+	    -webkit-box-pack: center;
+	    justify-content: center;
+	    -webkit-box-align: center;
+	    align-items: center;
+	    font-weight: bold;
+	    line-height: 1;
+	    color: rgb(255, 255, 255);
+	    margin: 0px;
+	}
+	.thisisgood {
+		background-color: rgb(255, 146, 43);
+	}
+	.box-shadow {
+		box-shadow: rgba(41, 42, 43, 0.2) 0px 8px 10px -4px;
+	    margin-bottom: 16px;
+	    position: relative;
+	    cursor: pointer;
+	    border-radius: 5px;
+	}
+	.mini-kit-info-div {
+		font-size: 14px;
+	    font-weight: normal;
+	    color: rgb(62, 64, 66);
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    position: relative;
+	    padding-left: 22px;
+	    margin: 0px 0px 8px;
+	}
+	.show-kit-span {
+		color: rgb(255, 146, 43);
+	    font-size: 11px;
+	    font-weight: 500;
+	    line-height: 16px;
+	    letter-spacing: normal;
+	}
+	.pretty-blank-box {
+		width: initial;
+    	margin: 16px -20px 12px;
+	}
+	.mini-sale-percent-span {
+		margin-left: 4px;
+	    font-weight: 600;
+	    color: rgb(252, 61, 70);
+	    margin-right: 4px;
+	    font-size: 11px;
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    padding: 0px;
+	}
+	.mini-price-span {
+		font-size: 11px;
+	    font-weight: normal;
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    color: rgb(168, 174, 179);
+	    margin: 2px 0px 0px;
+	    padding: 0px;
+	}
+	.mini-price-info-div {
+		font-size: 11px;
+	    font-weight: normal;
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    display: flex;
+	    color: rgb(168, 174, 179);
+	    margin: 2px 0px 0px;
+	}
+	.mini-lesson-info-div {
+		font-size: 14px;
+	    font-weight: normal;
+	    color: rgb(62, 64, 66);
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    position: relative;
+	    padding-left: 22px;
+	    margin: 0px 0px 8px;
+	}
+	.mini-cute-svg {
+		position: absolute;
+	    top: 2px;
+	    left: 0px;
+	    overflow: hidden;
+	}
+	.select-difficult-price-div {
+		display: flex;
+	    -webkit-box-pack: justify;
+	    justify-content: space-between;
+	    align-items: flex-end;
+	}
+	.big-sale-percent-div {
+	
+	}
+	.iamstrong {
+		font-size: 20px;
+	    font-weight: bold;
+	    line-height: 28px;
+	    letter-spacing: -0.3px;
+	    color: rgb(252, 61, 70);
+	    margin: 0px;
+	}
+	.mini-difficult-price-div {
+		text-align: right;
+    	flex: 1 1 auto;
+	}
+	.mini-sale-before{
+		font-size: 11px;
+	    font-weight: normal;
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    color: rgb(168, 174, 179);
+	    text-decoration-line: line-through;
+	    margin: 0px 6px 0px 0px;
+	}
+	.mini-sale-after{
+		font-size: 11px;
+	    font-weight: normal;
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    color: rgb(168, 174, 179);
+	    margin: 0px;
+	}
+	.ifsplitmoney {
+		font-size: 11px;
+	    font-weight: normal;
+	    color: rgb(62, 64, 66);
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    margin: 0px 6px 0px 0px;
+	}
+	.iamstrongfinal {
+		font-size: 16px;
+	    color: rgb(62, 64, 66);
+	    line-height: 24px;
+	    letter-spacing: -0.2px;
+	    font-weight: bold;
+	    margin: 0px;
+	}
+	
+	
+	.payment-top-child-div {
+		display: flex;
+	    -webkit-box-align: center;
+	    align-items: center;
+	    -webkit-box-pack: justify;
+	    justify-content: space-between;
+	    padding: 0px;
+	    height: 32px;
+	}
+	.shield-yellow-span {
+		font-size: 14px;
+	    line-height: 24px;
+	    color: rgb(255, 169, 77);
+	}
+	.shield-yellow-image {
+		width: 18px;
+	    height: 18px;
+	    margin-right: 4px;
+	}
+	.pament-top-title-content-h3 {
+		color: rgb(255, 255, 255);
+	    font-weight: 600;
+	    margin: 0px 8px 0px 0px;
+	    font-size: 24px;
+	    font-weight: bold;
+	    letter-spacing: -0.4px;
+	    padding: 0px;
+	    margin-block-start: 1em;
+	    margin-block-end: 1em;
+	    margin-inline-start: 0px;
+	    margin-inline-end: 0px;
+	}
+	.setPayment-div {
+		width: 100%;
+		padding: 24px;
+	}
+	.setPayment-section {
+		width: 100%;
+		position: relative;
+	}
+	.delivery-info-out-div {
+		margin-bottom: 16px;
+	    display: inline-flex;
+	    flex-direction: column; 
+	}
+	.delivery-info-in-div {
+		display: flex;
+	    -webkit-box-align: center;
+	    align-items: center;
+    }
+    .info-title-h4 {
+    	font-size: 20px;
+	    font-weight: bold;
+	    color: rgb(62, 64, 66);
+	    line-height: 28px;
+	    letter-spacing: -0.3px;
+	    margin: 0px;
+    	padding: 0px;
+    	display: block;
+	    margin-block-start: 1.33em;
+	    margin-block-end: 1.33em;
+	    margin-inline-start: 0px;
+	    margin-inline-end: 0px;
+	    color: rgb(24, 32, 38);
+	    font-weight: 600;
+	    line-height: 21px;
+	    font-size: 18px;
+	    margin: 0px 0px 10px;
+    }
+    .section-in-box-div {
+    	width: 100%;
+    	margin-top: 0px;
+	    margin-bottom: 16px;
+	    color: rgb(62, 64, 66);
+	    line-height: 24px;
+	    flex: 1 1 0%;
+	    display: flex;
+	    flex-direction: column;
+	    margin: 0px 0px 16px;
+    }
+    .section-in-label-div {
+    	width: 100%;
+    	font-size: 14px;
+	    font-weight: normal;
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    color: rgb(62, 64, 66);
+	    margin: 0px 0px 4px;
+	    display: inline-block;
+	}
+	.section-in-input {
+		width: 100%;
+		font-size: 14px;
+	    font-weight: normal;
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    background-color: white;
+	    height: 48px;
+	    width: 100%;
+	    color: rgb(62, 64, 66);
+	    box-sizing: border-box;
+	    margin: 0px;
+	    border-width: 1px;
+	    border-style: solid;
+	    border-color: rgb(221, 224, 226);
+	    border-image: initial;
+	    flex: 1 1 auto;
+	    padding: 0px 16px;
+	    border-radius: 3px;
+	    font: 400 13.3333px Arial;
+	    outline: 0 none;
+	    box-shadow: rgba(41, 42, 43, 0.16) 0px 1px 3px -1px, rgba(0, 0, 0, 0.04) 0px 0px 1px 1px;
+	}
+	.section-in-input:focus {
+		border-color: black;
+	}
+	.section-in-bixbox-div {
+		width: 100%;
+		margin-top: 0px;
+	    margin-bottom: 16px;
+	    color: rgb(62, 64, 66);
+	    line-height: 24px;
+	    flex: 1 1 0%;
+	    display: flex;
+	    flex-direction: column;
+	    margin: 0px 0px 16px;
+	    font: 400 13.3333px Arial;
+	}
+	.findpostcode-span {
+		display: flex;
+	    -webkit-box-pack: center;
+	    justify-content: center;
+	    -webkit-box-align: center;
+	    align-items: center;
+	    flex: 0 0 auto;
+	}
+	.findpostcode-button {
+		font-size: 14px;
+	    font-weight: normal;
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    height: 48px;
+	    color: rgb(62, 64, 66);
+	    box-sizing: border-box;
+	    padding: 0px 16px;
+	    margin: 0px;
+	    background: rgb(248, 248, 249);
+	    border-width: 1px 1px 1px;
+	    border-style: solid solid solid none;
+	    border-color: rgb(205, 209, 212) rgb(205, 209, 212) rgb(205, 209, 212);
+	    border-image: initial;
+	    border-left: none;
+	    flex: 0 0 auto;
+	}
+	.findpostcode-over-div {
+		border-top-left-radius: 1px;
+	    border-bottom-left-radius: 1px;
+	    flex: 1 1 auto;
+	    box-sizing: border-box;
+	    border-radius: 0px;
+	    color: rgb(62, 64, 66);
+	    line-height: 24px;
+	}
+	.findpostcode-outline-div {
+		display: flex;
+	    -webkit-box-align: stretch;
+	    align-items: stretch;
+	    flex-direction: row;
+	    margin: 0px 0px 10px;
+	}
+	.payment-method-button {
+		position: relative;
+	    width: 100%;
+	    margin-top: 16px;
+	    background-color: rgb(255, 255, 255);
+	    text-align: left;
+	    border-radius: 1px;
+	    border-width: 1px;
+	    border-style: solid;
+	    border-color: rgb(205, 209, 212);
+	    border-image: initial;
+	    padding: 12px 16px;
+	    outline: 0 none;    
+	    font-family: inherit;			
+	}
+	
+	.payment-method-button:focus {
+		position: relative;
+	    width: 100%;
+	    margin-top: 16px;
+	    background-color: rgb(255, 255, 255);
+	    text-align: left;
+	    border-radius: 1px;
+	    border-width: 1px;
+	    border-style: solid;
+	    border-color: rgb(205, 209, 212);
+	    border-image: initial;
+	    padding: 12px 16px;
+	    outline: 0 none;    
+	    font-family: inherit;			
+	}
+	
+	.payment-method-on-button {
+		position: relative;
+	    width: 100%;
+	    text-align: left;
+	    border-radius: 1px;
+	    border-width: 1px;
+	    background-color: rgb(255, 255, 255);
+	    border-style: solid;
+	    margin-top: 16px;
+	    border-image: initial;
+	    padding: 12px 16px;
+	    font-family: inherit;
+		outline: none !important;
+	    border-color: black;
+	    -webkit-box-shadow: none !important;
+	    box-shadow: none !important;
+	    background: url('/image/gon/paymentflow.png') no-repeat 97% 50%;	
+	}
+	
+	.payment-method-image {
+		display: inline-block;
+	    vertical-align: middle;
+	    width: 20px;
+	    height: 20px;
+	    margin-right: 5px;
+	    border-style: none;
+	}
+	.payment-method-text {
+		font-size: 14px;
+	    font-weight: normal;
+	    color: rgb(62, 64, 66);
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    display: inline-block;
+	    vertical-align: middle;
+	    margin: 0px;
+	}
+	.payment-section-top {
+		margin-bottom: 8px;
+	    display: inline-flex;
+	    flex-direction: column;
+	    padding: 0px;
+	}
+	.payment-section {
+		display: flex;
+	    -webkit-box-align: center;
+	    align-items: center;
+	    padding: 0px;
+	}
+	.deliveryprice-p {
+		font-size: 11px;
+	    font-weight: normal;
+	    line-height: 16px;
+	    letter-spacing: normal;
+	    color: rgb(133, 138, 141);
+	    margin: -12px 0px 16px;
+	}
+	.price-info-in-div {
+		display: flex;
+	    -webkit-box-align: center;
+	    align-items: center;
+   	}
+   	.price-info-out-div {
+   		margin-bottom: 6px;
+	    display: inline-flex;
+	    flex-direction: column;
+	    padding: 0px;
+   	}
+   	.final-price-in-div {
+   		display: flex;
+	    -webkit-box-align: center;
+	    align-items: center;	    
+   	}
+   	.final-price-out-th {
+   		padding-top: 8px;
+   	}
+   	.final-price-info-table {
+   		width: 100%;
+	    margin-bottom: 8px;
+	    display: table;
+	    border-collapse: separate;
+	    border-spacing: 2px;
+	    border-color: grey;
+   	}
+   	.final-price-info-section {
+   		margin-bottom: 4px;
+   	}
+   	td {
+   		text-align: right;
+   		font-size: 14px;
+	    font-weight: normal;
+	    line-height: 20px;
+	    letter-spacing: -0.2px;
+	    color: rgb(133, 138, 141);
+	    margin: 0px;
+	    padding: 2px 0px;
+	    display: table-cell;
+    	vertical-align: inherit;
+   	}
+   	table {
+   		border-collapse: collapse;
+   		border-spacing: 2px;
+   	}
+   	th {
+   		text-align: left;
+		font-weight: normal;
+		font-size: 14px;
+		font-weight: normal;
+		line-height: 20px;
+		letter-spacing: -0.2px;
+		color: rgb(133, 138, 141);
+		margin: 0px;
+		padding: 2px 0px;
+		display: table-cell;
+		vertical-align: inherit;	
+   	}
+   	.final-price-in-result-div {
+   		font-size: 16px;
+	    font-weight: normal;
+	    color: rgb(62, 64, 66);
+	    line-height: 24px;
+	    letter-spacing: -0.2px;
+	    margin: 0px;
+   	}
+   	.final-price-in-result-td {
+   		padding-top: 8px;
+   	}
+   	.final-price-blank-div {
+   		content: "";
+	    display: block;
+	    width: auto;
+	    margin: 24px -24px;
+	    border-bottom: 1px solid rgb(237, 239, 240);
+   	}
+   	.payment-button-div {
+   		margin-top: 24px;
+    	padding: 0px 24px 24px;
+   	}
+   	.payment-button {
+   		box-shadow: rgba(41, 42, 43, 0.16) 0px 1px 3px -1px, rgba(0, 0, 0, 0.04) 0px 0px 1px 1px;
+   		width: 100%;
+	    display: flex;
+	    vertical-align: middle;
+	    color: rgb(255, 255, 255);
+	    background-color: rgb(255, 146, 43);
+	    font-weight: 700;
+	    font-size: 16px;
+	    letter-spacing: -0.2px;
+	    height: 48px;
+	    text-decoration-line: none;
+	    border-radius: 3px;
+	    padding: 0px 20px;
+	    transition: background-color 0.1s ease 0s;
+	    box-sizing: border-box;
+	    display: flex;
+	    -webkit-box-pack: center;
+	    justify-content: center;
+	    -webkit-box-align: center;
+	    align-items: center;
+	    flex-direction: row;
+	    border-width: 0px;
+	    border-style: initial;
+	    border-color: initial;
+	    border-image: initial;
+	    outline: none;
+	    margin: 0px;
+	    padding: 0px;
+	    flex: initial;
+	    
+   	}
+   	
+   	@media (max-width: 580px) {
+   		.payment-form {
+	   		display: block;
+	    	margin-top: 0em;
+	    	width: 100%;
+	    	margin: auto;
+   		}
+   		.payment-top-title-div {
+			background-color: rgb(27, 28, 29);
+	    	padding: 20px;
+	    	width: 100%;
+	    	height: 72px;
+		}
+		.set-payment-div {
+			margin: auto;
+			width: 100%;
+		}
+		#wrap {
+			width: 100%;
+			height: 300px;
+			display:none;
+			border:1px solid;
+			margin-bottom:16px; 
+			position:relative; 
+			border-color:rgb(221, 224, 226);
+		}
+   	}
+	@media (min-width: 581px) {
+		#wrap {
+			width: 532px;
+			height: 300px;
+			display:none;
+			border:1px solid;
+			margin-bottom:16px; 
+			position:relative; 
+			border-color:rgb(221, 224, 226);
+		}
+		.payment-form {
+	   		display: block;
+	    	margin-top: 0em;
+	    	width: 580px;
+	    	margin: auto;
+   		}
+   		.payment-top-title-div {
+			background-color: rgb(27, 28, 29);
+	    	padding: 20px;
+	    	width: 580px;
+	    	height: 72px;
+		}
+		.set-payment-div {
+			margin: auto;
+			width: 580px;
+		}
+	}
+	.component-option-div { 
+		display:block;
+	}
+	.payment-form {
+		display: none;
+	}
+	.paymethod-phone-on{
+		display: none;
+	}
+	.paymethod-card {
+		display: none;
+	}

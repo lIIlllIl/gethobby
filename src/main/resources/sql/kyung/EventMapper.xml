@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="EventMapper">
+
+<resultMap id="eventSelectMap" type="event">
+<result property="eventNo" 				column="EVENT_NO"		jdbcType="INTEGER"/>
+<result property="eventId" 				column="EVENT_ID" 		jdbcType="INTEGER"/>
+<result property="eventTitle" 			column="EVENT_TITLE"		jdbcType="VARCHAR"/>
+<result property="eventContent" 		column="EVENT_CONTENT"		jdbcType="CLOB"		javaType="java.lang.String"/>
+<result property="eventStartDate"		column="START_DATE"		jdbcType="DATE"/>
+<result property="eventEndDate" 		column="END_DATE"		jdbcType="DATE"/>
+<!--   
+<collection property="category" 		column="EVENT_CATEGORY"		javaType="java.util.ArrayList" ofType="java.lang.String" select="getCategoryListById"/>
+--> 
+<result property="category" 			column="EVENT_CATEGORY" jdbcType="CHAR" />
+<result property="eventDiscount" 		column="EVENT_DISCOUNT"		jdbcType="INTEGER"/>
+<result property="eventImage" 			column="EVENT_IMAGE"		jdbcType="INTEGER"/>
+<result property="hobbyClass.hobbyClassNo" 	column="class_no"	jdbcType="INTEGER"/>
+<result property="hobbyClass.category"	column="category"		jdbcType="VARCHAR"/>
+<result property="user.userId" 			column="user_id"		jdbcType="INTEGER"/>
+</resultMap>
+
+<!-- List<String> category인 Event의 필드 때문에 매핑할 수 없는 문제해결위해 
+		HobbyClass의 String category 이용해 매핑  -->
+<resultMap id="eventMap" type="com.gethobby.service.domain.HobbyClass">
+	<result property="event.eventNo" 				column="EVENT_NO"		jdbcType="INTEGER"/>
+	<result property="event.eventId" 				column="EVENT_ID" 		jdbcType="INTEGER"/>
+	<result property="category" 			column="EVENT_CATEGORY" jdbcType="CHAR"/>
+</resultMap>
+ 	
+ 	<!-- collection property쓰려고 만들어봄 -->
+ 	<!--  
+ 	<select id="getCategoryListById" resultType="String">
+ 		SELECT 
+ 		event_category
+ 		FROM event
+ 		where event_title = #{eventTitle} 
+ 	</select> -->
+ 	
+ 	
+ 		<!-- 이벤트리스트 불러오는 쿼리 
+ 	<select id="getEventListGroupBYId" resultMap="eventSelectMap"> 
+ 	 SELECT 
+     event_id, start_date, end_date, event_title, SUBSTR(XMLAGG(XMLELEMENT(x, ',', event_category) ORDER BY event_category).EXTRACT('//text()').GETSTRINGVAL(), 2) event_category 
+     FROM event 
+     GROUP BY event_id, start_date, end_date, event_title 
+     </select>
+     -->
+ 	
+ 	<delete id="deleteSelectedEvent" parameterType="list">
+ 		DELETE 
+ 		FROM event
+ 		<where>
+ 		event_id IN
+ 			<foreach collection="list" item="value" separator="," open="(" close=")">
+ 			#{value}			
+ 			</foreach>
+ 		</where>
+ 	</delete>
+ 	
+ 	
+ 	<!-- 이벤트리스트 불러오는 쿼리 -->
+ 	<select id="getEventListGroupBYId" parameterType="map" resultMap="eventSelectMap"> 
+     SELECT *
+		FROM ( SELECT ROWNUM AS row_seq, inner_table.* 
+				FROM
+					(SELECT  *
+			 		 FROM ( 
+			 		 
+			 		  	 SELECT 
+     					 	<!--  event_id, start_date as startDate, to_char(end_date, 'YY/MM/DD') as endDate,-->
+     					 	event_id, start_date , end_date ,
+     						event_title, event_image,
+     					 	SUBSTR(XMLAGG(XMLELEMENT(x, ',', event_category) ORDER BY event_category).EXTRACT('//text()').GETSTRINGVAL(), 2) event_category 
+    					 FROM event 
+    					 GROUP BY event_id, start_date, end_date, event_title, event_image	)
+ 					 		
+ 			<if test='search.searchCondition.equals("진행중")'> 
+			 		 WHERE end_date  <![CDATA[>=]]> #{today} 
+			 		<!--  WHERE endDate  <![CDATA[>=]]> #{today} 
+					 AND   startDate <![CDATA[<=]]> #{today}  ) inner_table -->
+					 AND   start_date <![CDATA[<=]]> #{today}  ) inner_table
+			</if>
+ 			<if test='search.searchCondition.equals("종료")'> 
+
+					 WHERE end_date <![CDATA[<]]> #{today}  ) inner_table
+
+			</if>
+			<if test='search.searchCondition.equals("전체")'> 
+		
+					 order by start_date DESC) inner_table
+			</if>
+			
+				WHERE  ROWNUM <![CDATA[<=]]> #{search.currentPage}*#{search.pageSize} )
+		WHERE row_seq BETWEEN (#{search.currentPage} -1)* #{search.pageSize} +1
+		AND #{search.currentPage}* #{search.pageSize}
+ 	</select>
+ 	
+ 	<!--  -->
+ 	<select id="getTotalEventListGroupBYId" parameterType="map"  resultType="int"> 
+        SELECT count(*)
+		FROM  ( SELECT  	
+ 			<if test='search.searchCondition.equals("전체")'> 
+ 				 		event_id <!-- event_no -->
+		 		FROM event
+		 		group by event_id)  <!-- event_no -->
+ 			</if>		 	
+ 			<if test='search.searchCondition.equals("진행중")'> 
+ 					   		*
+			 	FROM ( 
+			 			SELECT 
+                        event_id, to_char(start_date, 'YY/MM/DD') as startDate, to_char(end_date, 'YY/MM/DD') as endDate , event_title, SUBSTR(XMLAGG(XMLELEMENT(x, ',', event_category) ORDER BY event_category).EXTRACT('//text()').GETSTRINGVAL(), 2) event_category 
+                        FROM event 
+                        GROUP BY event_id, start_date, end_date, event_title 	
+ 					 	)	
+ 			    WHERE endDate <![CDATA[>=]]> #{today} 
+ 			    AND	 startDate <![CDATA[<=]]> #{today} 
+ 		   )count_table
+ 					 	
+ 			</if>		
+ 			<if test='search.searchCondition.equals("종료")'> 
+						   	*
+			 	FROM ( 
+			 			SELECT 
+                        event_id, start_date , to_char(end_date, 'YY/MM/DD') as endDate , event_title, SUBSTR(XMLAGG(XMLELEMENT(x, ',', event_category) ORDER BY event_category).EXTRACT('//text()').GETSTRINGVAL(), 2) event_category 
+                        FROM event 
+                        GROUP BY event_id, start_date, end_date, event_title 		
+ 					 	) 	
+			    WHERE endDate <![CDATA[<]]> #{today}  
+			 )count_table
+			</if>	 
+ 	</select>
+ 	
+ 	
+ 	<!-- Event_class table에 Insert할  -->
+ 	<select id="getInsertClassNo" parameterType="String" resultMap="eventSelectMap">
+ 		select class_no
+		from hobbyclass
+		where class_state = '3'
+		and category = #{upperCategory}
+ 	</select>
+ 	
+	<!-- 같은 이벤트에 똑같은 event_id 부여하기/ 다른 이벤트와 겹치지않게 만들기위한 과정 -->
+	<select id="getLastEvent" resultMap="eventMap">
+ 		SELECT event_id, event_no, event_category
+		FROM event
+		where event_id = (select MAX(event_id) AS eventId from event)
+	</select>
+	
+	<select id="getDeleteEventNoList" parameterType="int" resultMap="eventSelectMap">
+		select event_no
+		from event
+		where event_id = #{eventId}
+	</select>
+	
+ 	<insert id="addEventAdmin" parameterType="map">
+ 		INSERT
+ 		INTO event (EVENT_NO, EVENT_ID, EVENT_TITLE, EVENT_CONTENT, START_DATE, END_DATE, EVENT_CATEGORY, EVENT_DISCOUNT, EVENT_IMAGE )
+ 		VALUES (	seq_event_event_no.NEXTVAL,
+ 					#{event.eventId},
+ 					#{event.eventTitle:VARCHAR},
+ 					#{event.eventContent},
+ 					#{event.eventStartDate},
+ 					#{event.eventEndDate},
+ 					#{sendCategory},
+ 					#{event.eventDiscount:INTEGER},
+ 					#{event.eventImage}      )
+ 	</insert>
+ 	
+ 	<insert id="addIntoEvent_Class" parameterType="map">
+ 		INSERT
+ 		INTO event_class (EVENTCLASS_NO, EVENT_NO, CLASS_NO)
+ 		VALUES ( seq_event_class_eventclass_no.NEXTVAL, 
+ 				#{event_classEventNo},
+				#{classNo}  )
+ 	</insert>
+ 	
+ 	<select id="getEventCategory" parameterType="int" resultType="String">
+ 		SELECT
+ 		event_category
+ 		FROM event
+ 		where event_id = #{eventId}
+ 	</select>
+ 	
+ 	<select id="getEventWithoutCategory" parameterType="int" resultMap="eventSelectMap">
+		SELECT *
+		FROM (	SELECT
+				event_no, event_id, event_title, event_content, start_date, end_date, event_discount, event_image
+				FROM event
+				where event_id = #{eventId}	)
+		WHERE ROWNUM = 1
+	</select>
+ 	
+
+	<!-- 정렬된 list 가져오기 -->
+	<select id="getEventList" parameterType="map" resultMap="eventSelectMap">
+ 		SELECT *
+		FROM ( SELECT ROWNUM AS row_seq, inner_table.* 
+				FROM
+					(SELECT  *
+			 		 FROM ( SELECT event_no, event_title, EVENT_ID, start_date, to_char(end_date, 'YY/MM/DD') as endDate , event_image
+ 					 		FROM event	)
+ 			<if test='search.searchCondition.equals("진행중")'> 
+			 		 WHERE endDate  <![CDATA[>=]]> #{today} ) inner_table
+
+			</if>
+ 			<if test='search.searchCondition.equals("종료")'> 
+
+					 WHERE endDate <![CDATA[<]]> #{today}  ) inner_table
+
+			</if>
+			<if test='search.searchCondition.equals("전체")'> 
+		
+					 order by start_date DESC) inner_table
+			</if>
+			
+				WHERE  ROWNUM <![CDATA[<=]]> #{search.currentPage}*#{search.pageSize} )
+		WHERE row_seq BETWEEN (#{search.currentPage} -1)* #{search.pageSize} +1
+		AND #{search.currentPage}* #{search.pageSize}
+ 	</select>
+ 	
+ 	<select id="getEventListTotalCount" parameterType="map" resultType="int">
+ 	 	
+ 	 	SELECT count(*)
+		FROM  ( SELECT  	
+ 			<if test='search.searchCondition.equals("전체")'> 
+ 				 		event_id <!-- event_no -->
+		 		FROM event
+		 		group by event_id)  <!-- event_no -->
+ 			</if>		 	
+ 			<if test='search.searchCondition.equals("진행중")'> 
+ 					   		*
+			 	FROM ( SELECT event_title, EVENT_ID, start_date, to_char(end_date, 'YY/MM/DD') as endDate , event_image
+ 					 	FROM event		)	
+ 			    WHERE endDate <![CDATA[>=]]> #{today}  )count_table
+ 					 	
+ 			</if>		
+ 			<if test='search.searchCondition.equals("종료")'> 
+						   	*
+			 	FROM ( SELECT event_title, EVENT_ID, start_date, to_char(end_date, 'YY/MM/DD') as endDate , event_image
+ 					 	FROM event		) 	
+			           WHERE endDate <![CDATA[<]]> #{today}   )count_table
+			</if>	 
+													  
+ 	</select>
+ 	
+ 	<!-- 전체(최신순으로 정렬된) eventList -->
+ 	<!-- getEventListAdmin -->
+ 	<select id="getEventListNewest" parameterType="map" resultMap="eventSelectMap">
+ 		SELECT *
+		FROM ( SELECT ROWNUM AS row_seq, inner_table.* 
+				FROM
+					(SELECT  *
+					 FROM ( SELECT event_no, event_title, EVENT_ID, start_date, end_date , event_image
+ 					 		FROM event	)
+					 order by start_date DESC) inner_table
+				WHERE  ROWNUM <![CDATA[<=]]> #{search.currentPage}*#{search.pageSize} )
+		WHERE row_seq BETWEEN (#{search.currentPage} -1)* #{search.pageSize} +1
+		AND #{search.currentPage}* #{search.pageSize}
+ 	</select>
+ 	
+ 	
+ 	
+ 	<!-- 수정필요해보임 ////////////////-->
+ 	<update id="updateEventAdminExceptCategory" parameterType="event">
+ 		UPDATE event
+ 		<set>
+ 			event_title = #{eventTitle},
+ 			event_content = #{eventContent},
+ 			start_date = #{eventStartDate},
+ 			end_date = #{eventEndDate},
+ 			event_discount = #{eventDiscount},
+ 			event_image = #{eventImage}
+ 		</set>
+ 		WHERE event_id = #{eventId}
+ 	</update>
+ 	
+ 	<delete id="deleteEvent" parameterType="int">
+ 		DELETE 
+		FROM event
+ 		WHERE event_id = #{eventId}
+ 	</delete>
+ 	
+ 	<!-- 
+ 	<update id="updateCategory" parameterType="map">
+ 		UPDATE event
+ 		<set>
+ 			event_category = #{category},
+ 		</set>
+ 		WHERE event_no = #{eventNo}
+ 	</update>
+ 	 -->
+ 	
+ 	<!-- update하는 과정중 카테고리 업데이트 후 불필요한 row 의 eventNo 가져오는 쿼리 -->
+ 	<!--  
+ 	<select id="getDeleteEventNo" parameterType="map" resultType="eventSelectMap">
+ 		SELECT inner_table.event_no
+ 		FROM (	SELECT
+ 				event_no, event_id
+ 				FROM event
+                WHERE event_id = #{eventId}
+                ORDER BY event_no DESC )inner_table 
+ 		WHERE ROWNUM <![CDATA[<=]]> #{rowNo}
+ 	</select> -->
+ 	
+ 	<!-- update하는 과정중 카테고리없는 이벤트 삭제하는 쿼리 -->
+ 	<!-- 
+ 	<delete id="deleteEvent" parameterType="List">
+ 		DELETE 
+ 		FROM event
+ 		WHERE 
+ 		<foreach collection="eventNo" index="index" separator=",">
+ 		#{eventNo}
+ 		</foreach>
+ 	</delete>  -->
+ 	 
+ 	
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="NoticeMapper">
+ 	
+ 	<resultMap id="noticeSelectMap" type="article">
+ 		<result property="articleNo" 	column="article_no"	jdbcType="INTEGER"/>
+ 		<result property="user.userId"	column="user_id"	jdbcType="VARCHAR"/>
+ 		<result property="user.nickName" 	column="nickname"	jdbcType="VARCHAR"/>
+ 		<result property="boardCode"	column="board_code"	jdbcType="CHAR"/>
+ 		<result property="articleType"	column="article_type"	jdbcType="CHAR"/>
+ 		<result property="articleTitle"	column="article_title"	jdbcType="VARCHAR"/>
+ 		<result property="articleContent"	column="article_content"	jdbcType="CLOB"/>
+ 		<result property="articleImage"		column="article_image"	jdbcType="VARCHAR"/>
+ 		<result property="totalView"	column="total_view"		jdbcType="INTEGER"/>
+ 		<result property="totalLike"	column="total_like"		jdbcType="INTEGER"/>
+ 		<result property="totalReport"	column="total_report"	jdbcType="INTEGER"/>
+ 		<result	property="regDate"		column="reg_date"		jdbcType="VARCHAR"/>
+ 		
+ 	</resultMap>
+ 	
+ 	<insert id="addNotice" parameterType="article">
+ 		Insert INTO article(article_no,user_Id,board_code,article_title,article_content,reg_date)
+ 		VALUES(seq_article_article_no.nextval,#{user.userId},#{boardCode},#{articleTitle:VARCHAR},#{articleContent},TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI')) 	
+ 	</insert>
+ 	
+ 	<select id="getNotice" parameterType="int" resultMap="noticeSelectMap">
+ 		SELECT article_no,user_Id,board_code,article_title,article_content,reg_date,total_view
+ 		FROM article
+ 		WHERE article_no = #{value} 	
+ 	</select>
+ 	
+ 	<select id="getArticleNo" resultType="int">
+ 		SELECT seq_article_article_no.currval
+ 		FROM dual
+ 	</select>
+ 	
+ 	<update id= "updateNotice" parameterType="article">
+ 		UPDATE article
+ 		<set>
+ 		article_title = #{articleTitle},
+ 		article_content = #{articleContent}, 
+ 		reg_date = TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI')		
+ 		</set>
+ 		WHERE article_no = #{articleNo}
+ 	</update>
+ 	<select id="getTotalCount" parameterType="search" resultType="int">
+	 	SELECT COUNT(*)
+	 	FROM( SELECT * FROM article 
+	 	<where>
+	 	 board_code = '4'
+	 	</where> 	
+	 	)countTable 	
+ 	</select>
+ 	
+ 	<select id="getNoticeList" parameterType="search" resultMap="noticeSelectMap">
+ 		 SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		( 
+	  	SELECT article_no,article_title, board_code, reg_date, total_view
+ 		FROM article
+ 		<where>
+ 		BOARD_CODE = '4'
+ 		</where>
+ 		ORDER BY reg_date  ) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}  
+ 	
+ 	</select>
+ 	<delete id="deleteNotice" parameterType="int">
+ 		DELETE article
+ 		WHERE article_no = #{value}
+ 	</delete>
+ 	
+ 	<update id="updateNoticeView" parameterType="article"> 
+ 		UPDATE article
+ 		<set>
+ 		total_view = #{totalView}		
+ 		</set>
+ 		where article_no = #{articleNo} 		
+ 	</update>
+ 	
+</mapper>

@@ -1,0 +1,240 @@
+<!-- 2020-02-10 Git Commit -->
+	.header_title_div {
+		font-color: rgb(62, 64, 66);
+		font-size: 24px; 
+		font-weight: bold; 
+		margin: 0px 0px 32px;
+	}
+
+	.nav-link {
+	margin-bottom: 2px;
+	font-size: 14px;
+	width:100%;
+	color: black;
+}
+
+.file_input_lesson {
+	position: relative;
+	width: 155.98px;
+	height: 208.58px;
+	overflow: hidden;
+}
+
+.file_input_hidden_lesson {
+	width: 155.98px;
+	height: 208.58px;
+	opacity: 0;
+}
+
+.file_input_test_lesson {
+	position: absolute;
+	width: 155.98px;
+	height: 208.58px;
+	overflow: hidden;
+}
+
+
+
+.colorTest {
+	position: absolute;
+	width: 565.68px;
+	height: 423.98px;
+	background-color: #CA5E08;
+	
+}
+
+#bootstrap-overrides input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus,input[type="url"]:focus,  textarea:focus{
+  border-color: black;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+  outline: 0 none;
+}
+
+#inputState:focus {
+	border-color: black;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+ 	outline: 0 none;
+}
+
+.btn-dark.focus, .btn-dark:focus {
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+    background-color: #639d34;
+}
+
+.btn-dark:active:focus {
+  color: #ffffff; 
+  background-color: #161617; 
+  border-color: #494F57;
+}
+
+::selection { 
+	background-color: rgb(255, 89, 70) !important;
+  		color: rgb(255, 255, 255) !important;
+}
+
+@media (min-width: 992px) {
+	.summernote_div {
+		width:567.98px;
+	}
+	body {
+		padding-top : 62px;		
+	}	
+	.progress-div {
+		position:fixed;
+		top: 62px;
+		left: 240px;
+		width: 100%;
+		height: 4px;
+		z-index: 1000;	
+	}
+	.tab-content {
+		margin-left: 30px;
+	}
+	.start_hobbyclassInfo {
+		width:591.98px; 
+		padding: 44px 12px; 
+		margin-left: 27%;			
+	}
+	.hobbyclassInfo_body_div {
+		margin: 0px 0px 32px; 
+		width:568.98px;
+	}
+	.file_input_hidden {
+		width: 565.68px;
+		height: 423.98px;
+		opacity: 0;
+	}
+	
+	.file_input_div {
+		position: relative;
+		width: 565.68px;
+		height: 423.98px;
+		overflow: hidden;
+	}
+	.file_input_test {
+		position: absolute;
+		width: 565.68px;
+		height: 423.98px;
+		overflow: hidden;
+	
+	}
+	#inputState {
+		height:48px; 
+		border-radius: 0; 
+		width:567.98px;
+	}
+	.form-group {
+		width:267px; 
+		margin-bottom: 32px;
+	}
+	.lessonVideo_div {
+	width: 565.67px;
+	height: 25px;
+	}
+	.card_div {
+		height: 144px;
+		width: 567.98px;
+	}
+	.lesson_title_div {
+		width:565.67px; 
+		height:40px;"
+	}
+	.flex-column {
+		width: 240px;
+		height: calc(100vh - 72px);
+	}
+	.lesson_intro_div {
+		position: relative;
+		width:567.97px;
+		height: 208.58px;
+	}
+	.lesson_intro_text_div {
+		border-radius: 0;
+		width: 386px;
+	}
+	.lesson_intro_text_input_out_div {
+		width: 386px;
+		margin-right: 26px;
+		float: left;
+	}
+}
+@media (max-width: 991px) {
+	.summernote_div {
+		width:100%;
+	}
+	.progress-div {
+		position: relative;
+		top: 62px;
+		width: 100%;
+		height: 4px;
+		z-index: 1000;	
+	}
+	.start_hobbyclassInfo {
+		padding: 32px; 
+		margin-top: 62px;
+	}
+	.file_input_hidden {
+		width: 100%;
+		height: 423.98px;
+		opacity: 0;
+	}
+	
+	.file_input_div {
+		position: relative;
+		width: 100%;
+		height: 423.98px;
+		overflow: hidden;	
+	}
+	.file_input_test {
+		position: absolute;
+		width: 100%;
+		height: 423.98px;
+		overflow: hidden;
+		
+	}
+	#inputState {
+		height:48px; 
+		border-radius: 0; 
+		width:100%;
+	}
+	.form-group {
+		width:100%; 
+		margin-bottom: 32px;
+	}
+	.card_div {
+		height: 144px;
+		width: 100%;
+	}
+	.lesson_title_div {
+		width:100%; 
+		height:40px;
+	}
+	.lessonVideo_div {
+		width: 100%;
+		height: 25px;
+	}
+	.flex-column {
+		width: 100%;
+		height: calc(100vh - 72px);
+	}
+	.lesson_intro_div {
+		position: relative;
+		width:100%;
+		height: 430px;
+	}
+	.lesson_intro_text_div {
+		border-radius: 0;	
+		width: 100%;
+	}
+	.lesson_intro_text_input_out_div {
+		width: 100%;
+		margin-right: 26px;
+		float: left;
+	}
+	<%--
+	.tab-pane {
+		padding: 48px;
+	}
+	--%>
+	
+}

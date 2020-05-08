@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+ 		 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ 		"http://mybatis.org/dtd/mybatis-3-config.dtd">
+  						
+<configuration>
+
+	<settings>
+		<setting name="callSettersOnNulls" value="false"/>
+	</settings>	
+
+	<typeAliases>
+		<typeAlias alias="search" type="com.gethobby.common.Search" />
+		<typeAlias alias="page" type="com.gethobby.common.Page" />
+		<typeAlias alias="article" type="com.gethobby.service.domain.Article" />
+		<typeAlias alias="classAssess" type="com.gethobby.service.domain.ClassAssess" />
+		<typeAlias alias="event" type="com.gethobby.service.domain.Event" />
+		<typeAlias alias="favor" type="com.gethobby.service.domain.Favor" />
+		<typeAlias alias="hobbyClass" type="com.gethobby.service.domain.HobbyClass" />
+		<typeAlias alias="lesson" type="com.gethobby.service.domain.Lesson" />
+		<typeAlias alias="lessonTimes" type="com.gethobby.service.domain.LessonTimes" />
+		<typeAlias alias="purchase" type="com.gethobby.service.domain.Purchase" />
+		<typeAlias alias="question" type="com.gethobby.service.domain.Question" />
+		<typeAlias alias="reply" type="com.gethobby.service.domain.Reply" />
+		<typeAlias alias="report" type="com.gethobby.service.domain.Report" />
+		<typeAlias alias="steam" type="com.gethobby.service.domain.Steam" />
+		<typeAlias alias="user" type="com.gethobby.service.domain.User" />
+	</typeAliases>
+
+	
+  
+	<mappers>
+		<mapper resource="sql/woo/UserMapper.xml"/>
+		<mapper resource="sql/woo/NoticeMapper.xml"/>
+		<mapper resource="sql/gon/HobbyClassMapper.xml"/>
+		<mapper resource="sql/gon/LessonMapper.xml"/>
+		<mapper resource="sql/gon/PurchaseMapper.xml"/>
+		<mapper resource="sql/min/HobbyClassMapper.xml"/>
+		<mapper resource="sql/min/LessonMapper.xml"/>
+		<mapper resource="sql/min/QuestionReportMapper.xml"/>
+		<mapper resource="sql/kyung/CommuArticleMapper.xml"/>
+		<mapper resource="sql/kyung/CommuReplyMapper.xml"/>
+		<mapper resource="sql/kyung/EventMapper.xml"/>
+		<mapper resource="sql/sol/BoardArticleMapper.xml"/>
+		<mapper resource="sql/sol/BoardReplyMapper.xml"/>
+		<mapper resource="sql/sol/FavorMapper.xml"/>
+		<mapper resource="sql/sol/DeliveryMapper.xml"/>
+		
+	</mappers>
+
+	
+</configuration>

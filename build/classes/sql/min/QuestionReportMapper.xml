@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="QuestionReportMapper">
+ 	<resultMap id="questionMap" type="question">
+ 		<result property="questionNo" 		column="question_no" 		jdbcType="INTEGER" />
+ 		<result property="user.userId"  	column="user_id" 	 		jdbcType="VARCHAR" />
+ 		<result property="user.name" 	 	column="name" 	 	 		jdbcType="VARCHAR" />
+ 		<result property="user.nickName"   	column="nickname" 	 		jdbcType="VARCHAR" />
+ 		<result property="questionType"		column="question_type"  	jdbcType="CHAR"    /> 
+ 		<result property="questionTitle" 	column="question_title" 	jdbcType="VARCHAR" />
+ 		<result property="questionContent" 	column="question_content" 	jdbcType="VARCHAR" />
+ 		<result property="questionDate" 	column="question_date" 	 	jdbcType="VARCHAR" />
+ 		<result property="answerDate" 	 	column="answer_date" 	 	jdbcType="VARCHAR" />
+ 		<result property="answerContent"   	column="answer_content"     jdbcType="VARCHAR" />
+ 		<result property="questionState"   	column="question_state" 	jdbcType="CHAR"    />
+ 	</resultMap>
+ 	
+ 	<resultMap id="reportMap" type="report">
+ 		<result property="reportNo" 		column="report_no" 	 		jdbcType="INTEGER" />
+ 		<result property="user.userId"		column="user_id"	 		jdbcType="VARCHAR" />
+ 		<result property="user.name"		column="name"				jdbcType="VARCHAR" />
+ 		<result property="user.nickName"	column="nickname"			jdbcType="VARCHAR" />
+ 		<result property="replyNo"			column="reply_no"			jdbcType="INTEGER" />
+ 		<result property="articleNo"		column="article_no"			jdbcType="INTEGER" />
+ 		<result property="reportCode"		column="report_code"	 	jdbcType="VARCHAR" />
+ 		<result property="regDate"			column="reg_date"			jdbcType="DATE"    />
+ 		<result property="reportState"		column="report_state"		jdbcType="VARCHAR" />
+ 	</resultMap>
+ 	
+ 	<select id="getQuestion" parameterType="java.lang.Integer" resultMap="questionMap">
+ 		SELECT 
+ 		q.question_no, u.user_id, u.name, u.nickname, q.question_type, q.question_title, 
+ 		q.question_content, q.question_date, q.answer_date, q.answer_content, q.question_state 
+ 		FROM question q, users u 
+ 		WHERE q.user_id = u.user_id 
+ 			  AND q.question_no = #{questionNo} 
+ 	</select>
+ 	
+ 	<sql id="questionList">
+ 		SELECT 
+ 		q.question_no, u.user_id, u.name, u.nickname, q.question_type, q.question_title, 
+ 		q.question_content, q.question_date, q.answer_date, q.answer_content, q.question_state 
+ 		FROM question q, users u 
+ 		WHERE q.user_id = u.user_id 
+ 			  AND q.user_id = #{userId}  
+ 			  <if test="search.searchCondition != null ">
+ 			  	AND q.question_state = #{search.searchCondition}  
+ 			  </if>
+ 	</sql>
+ 	
+ 	<select id="getQuestionList" parameterType="java.util.Map" resultMap="questionMap">
+		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="questionList" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+	</select>
+ 	
+ 	<select id="questionListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="questionList" />
+				 	) countTable
+	</select>
+ 	
+ 	<update id="addAnswerAdmin" parameterType="question">
+ 		UPDATE 
+ 		question 
+ 		SET answer_date = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'), answer_content = #{answerContent}, question_state = '1'  
+ 		WHERE question_no = #{questionNo} 
+ 	</update> 
+ 	
+ 	<insert id="addQuestion" parameterType="question">
+		INSERT 
+		INTO question ( question_no, user_id, question_type, question_title, question_content, question_date ) 
+		VALUES ( seq_question_question_no.nextval, #{user.userId}, #{questionType}, #{questionTitle}, #{questionContent}, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI') ) 
+ 	</insert> 
+ 	
+ 	<sql id="totalQuestionAdmin">
+ 		SELECT 
+ 		q.question_no, u.user_id, u.name, u.nickname, q.question_type, q.question_title, 
+ 		q.question_content, q.question_date, q.answer_date, q.answer_content, q.question_state 
+ 		FROM question q, users u 
+ 		WHERE q.user_id = u.user_id  
+ 			  <if test="search.searchCondition != null ">
+ 			  	AND q.question_state = #{search.searchCondition}  
+ 			  </if>
+ 	</sql>
+ 	
+ 	<select id="getTotalQuestionAdmin" parameterType="java.util.Map" resultMap="questionMap">
+ 		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="totalQuestionAdmin" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+ 	</select>
+ 	
+ 	<select id="getTotalQuestionAdminTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="totalQuestionAdmin" />
+				 	) countTable
+	</select>
+ 	
+ 	<delete id="deleteQuestion" parameterType="java.lang.Integer">
+ 		DELETE 
+ 		FROM question 
+ 		WHERE question_no = #{questionNo} 
+ 	</delete>
+ 	
+ 	<insert id="addReport" parameterType="report">
+ 		INSERT 
+ 		INTO report( report_no, user_id, reply_no, article_no, report_code ) 
+ 		VALUES( seq_report_report_no.nextval, #{user.userId}, #{replyNo:INTEGER}, #{articleNo:INTEGER}, #{reportCode} ) 
+ 	</insert>
+ 	
+ 	<sql id="totalReportListAdmin">
+ 		SELECT 
+ 		r.report_no, u.user_id, u.nickname, u.name, r.reply_no, r.article_no, r.report_state, 
+ 		r.report_code, TO_DATE(TO_CHAR(r.reg_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') reg_date
+ 		FROM report r, users u 
+ 		WHERE r.user_id = u.user_id  
+ 			  <if test="search.searchCondition != 3">
+ 			  	AND r.report_state = #{search.searchCondition} 
+ 			  </if>
+ 		ORDER BY r.report_no DESC 
+ 	</sql>
+ 	
+ 	<select id="getTotalReportListAdmin" parameterType="java.util.Map" resultMap="reportMap">
+ 		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="totalReportListAdmin" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+ 	</select>
+ 	
+ 	<select id="getTotalReportListAdminTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="totalReportListAdmin" />
+				 	) countTable
+	</select>
+	
+	<select id="getReportAdminAtmosphere" resultType="java.lang.Integer">
+		SELECT 
+		COUNT( * ) 
+		FROM report 
+		WHERE report_state ='0' 
+	</select> 
+	
+	<select id="getReportAdminRefusal" resultType="java.lang.Integer">
+		SELECT 
+		COUNT( * ) 
+		FROM report 
+		WHERE report_state ='1' 
+	</select> 
+ 	
+ 	<select id="getReportAdminApproval" resultType="java.lang.Integer">
+		SELECT 
+		COUNT( * ) 
+		FROM report 
+		WHERE report_state ='2' 
+	</select> 
+	
+	<select id="getReportAdminAll" resultType="java.lang.Integer">
+		SELECT 
+		COUNT( * ) 
+		FROM report 
+	</select> 
+ 	
+ 	<update id="progressReportAdmin" parameterType="java.util.Map">
+ 		UPDATE 
+ 		report 
+ 		SET report_state = #{reportState}  
+ 		WHERE report_no = #{reportNo} 
+ 	</update>
+ 	
+ 	<select id="getReport" parameterType="java.util.Map" resultMap="reportMap">
+ 		SELECT 
+ 		reply_no, article_no 
+ 		FROM report 
+ 		WHERE report_no = #{reportNo} 
+ 	</select> 
+ 	
+ 	<select id="getUserReport" parameterType="java.util.Map" resultMap="reportMap">
+ 		SELECT 
+ 		report_no, user_id, reply_no, article_no 
+ 		FROM report 
+ 		WHERE user_id = #{userId} 
+		<if test="replyNo != null">
+			AND reply_no = #{replyNo} 
+		</if>
+		<if test="articleNo != null">
+			AND article_no = #{articleNo}  
+		</if>
+ 	</select> 
+ 	
+ 	<update id="updateUserTotalReport" parameterType="java.util.Map">
+ 		UPDATE 
+ 		users 
+ 		SET total_report = #{totalReport} 
+ 		WHERE user_id = #{userId} 
+ 	</update>
+ 	
+ 	<select id="getReportTargetArticle" parameterType="java.lang.Integer">
+ 		SELECT 
+ 		* 
+ 		FROM article 
+ 		WHERE article_no = #{articleNo} 
+ 	</select>
+</mapper>

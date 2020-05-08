@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CommuArticleMapper">
+
+	<resultMap  id="communityArticleSelectMap" type="article">
+	<result property="articleNo"				column="community_no"	jdbcType="INTEGER"/>
+	<result property="hobbyClass.hobbyClassNo" 	column="class_no"		jdbcType="INTEGER"/>
+	<result property="articleContent" 			column="community_content"	jdbcType="CLOB"		javaType="java.lang.String"/>
+	<result property="regDate"					column="reg_date"			jdbcType="VARCHAR"/>
+	<result property="user.userId" 					column="user_id"		jdbcType="VARCHAR"/>
+	<result property="user.profileImage" 			column="profile_image"  jdbcType="VARCHAR"/>
+	<result property="user.name"					column="name" 			jdbcType="VARCHAR"/>
+	<result property="user.nickName"  				column="nickname"		jdbcType="VARCHAR"/>
+	</resultMap>	
+	
+	<resultMap  id="communityReplySelectMap" type="reply">
+	<result property="replyNo"					column="community_no"	jdbcType="INTEGER"/>
+	<result property="user.userId" 				column="user_id"		jdbcType="INTEGER"/>
+	<result property="article.hobbyClass.hobbyClassNo" 	column="class_no"	jdbcType="INTEGER"/>
+	<result property="replyContent" 			column="community_content"	jdbcType="CLOB"		javaType="java.lang.String"/>
+	<result property="regDate"					column="reg_date"		jdbcType="VARCHAR"/>
+	<result property="article.articleNo"		column="ref_no"			jdbcType="INTEGER"/>
+	</resultMap>
+	
+	
+	<select id="getCreatorAtHobbyClass" parameterType="int" resultType="String">
+		SELECT  user_id 
+		FROM  hobbyClass
+		WHERE class_no = #{hobbyClassNo}
+	</select>
+	
+	
+	<insert id="addCommunityArticle" parameterType="article">
+		INSERT 
+		INTO community (community_no, class_no, user_id, community_content, reg_date, community_type)
+		VALUES (	seq_community_community_no.NEXTVAL,
+					#{hobbyClass.hobbyClassNo},
+					#{user.userId},
+					#{articleContent},
+					to_char( SYSDATE, 'YYYY-MM-DD HH24:MI'),
+					'0'
+				) 
+	</insert>
+	
+	<!-- 한개의 글만 불러오는 쿼리 -->
+	<!-- 'YYYY-MM-DD HH24:MI'형식의 regDate => 'YYYY-MM-DD'형식으로 뽑겠다. -->
+	<select id="getCommunityArticle" parameterType="int" resultMap="communityArticleSelectMap">
+		SELECT 
+		c.community_no, c.class_no, c.user_id, c.community_content, to_char(to_date(c.reg_date, 'YYYY-MM-DD HH24:MI'), 'YYYY-MM-DD')  as regDate,
+		u.user_id, u.name, u.nickname, u.profile_image
+		FROM community c, users u
+		WHERE c.user_id = u.user_id
+		AND community_no = #{articleNo}
+	</select>
+	
+	<update id="updateCommunityArticle" parameterType="article">
+	 	UPDATE community
+	 	<set>
+	 		community_content = #{articleContent},
+	 		reg_date = to_char( SYSDATE, 'YYYY-MM-DD HH24:MI')
+	 	</set>
+	 	WHERE community_no = #{articleNo}
+	</update>
+	
+	<delete id="deleteCommunityArticle" parameterType="int">
+		DELETE 
+		FROM community
+		WHERE community_no = #{articleNo}
+		OR  ref_no = #{articleNo}
+	</delete> 
+	
+	
+	<update id="updateSelectedCreator" parameterType="map">
+		UPDATE community
+		<set>
+			community_content = '부적절한 내용으로 삭제되었습니다.'
+		</set>
+		<where> 
+		community_no IN
+			<foreach collection="list" item="value" separator="," open="(" close=")">
+		 	#{value}
+			</foreach>
+		</where>
+	</update>
+	
+	<!-- CommunityList 출력과정-->
+	<select id="getCommunityArticleList" parameterType="map" resultMap="communityArticleSelectMap">
+		    SELECT *
+   			 FROM (
+   					 select  ROWNUM AS row_seq, inner_table.*
+    					FROM    (
+    								select 
+         							c.community_no, c.class_no, c.community_content, 
+        							 to_char(to_date(c.reg_date, 'YYYY-MM-DD HH24:MI'), 'YYYY-MM-DD HH24:MI')  as regDate,
+        							 u.user_id, u.name, u.nickname, u.profile_image
+									 FROM community c, users u, hobbyclass h
+									 WHERE c.user_id = u.user_id
+									 AND c.class_no = h.class_no
+                                     AND h.class_no = #{hobbyClassNo}
+   									 AND community_type = '0'
+   									 order by reg_date DESC )inner_table
+						WHERE ROWNUM &lt;= #{search.endRowNum} )
+			WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 
+	</select>
+	
+	<select id="getTotalCountCommunityArticle" parameterType="int" resultType="int"> 
+	    select count(*)
+    	from ( 
+    			select *
+    			from community
+    			where class_no = #{hobbyClassNo} 
+    			and community_type = '0'	)
+	</select>
+	
+</mapper>

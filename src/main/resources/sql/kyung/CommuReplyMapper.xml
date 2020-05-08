@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CommuReplyMapper">
+
+ 	<resultMap  id="communityReplySelectMap" type="reply">
+	<result property="replyNo"					column="community_no"	jdbcType="INTEGER"/>
+	<result property="user.userId" 					column="user_id"		jdbcType="VARCHAR"/>
+	<result property="user.profileImage" 			column="profile_image"  jdbcType="VARCHAR"/>
+	<result property="user.name"					column="name" 			jdbcType="VARCHAR"/>
+	<result property="user.nickName"  				column="nickname"		jdbcType="VARCHAR"/>
+	<result property="article.hobbyClass.hobbyClassNo" 	column="class_no"	jdbcType="INTEGER"/>
+	<result property="replyContent" 			column="community_content"	jdbcType="CLOB"		javaType="java.lang.String"/>
+	<result property="regDate"					column="reg_date"		jdbcType="VARCHAR"/>
+	<result property="article.articleNo"		column="ref_no"			jdbcType="INTEGER"/>
+	</resultMap>
+	
+		
+	<!-- COMMUNITY 댓글댓글댓글 ///// -->
+	<!-- 'YYYY-MM-DD HH24:MI'형식의 regDate => 'YYYY-MM-DD HH24:MI'형식으로 뽑겠다. -->
+	<select id="getCommunityReply" parameterType="int" resultMap="communityReplySelectMap">
+		SELECT 
+		c.community_no, c.class_no, c.community_content, to_char(to_date(c.reg_date, 'YYYY-MM-DD HH24:MI'), 'YYYY-MM-DD HH24:MI')  as regDate, c.community_type,
+		u.user_id, u.name, u.nickname, u.profile_image
+		FROM community c, users u
+		WHERE c.user_id = u.user_id
+		AND community_no = #{replyNo}
+	</select>
+	
+	<insert id="addCommunityReply"	parameterType="reply">
+		INSERT
+		INTO community (community_no, class_no, user_id, community_content, reg_date, community_type, ref_no)
+		VALUES (	seq_community_community_no.NEXTVAL,	
+					#{article.hobbyClass.hobbyClassNo},
+					#{user.userId},
+					#{replyContent},
+					to_char( SYSDATE, 'YYYY-MM-DD HH24:MI'),
+					'1',
+					#{article.articleNo}		
+				)
+	</insert>
+	
+	<update id="updateCommunityReply" parameterType="reply">
+		UPDATE community
+		<set>
+			community_content = #{replyContent},
+	 		reg_date = to_char( SYSDATE, 'YYYY-MM-DD HH24:MI')
+		</set>
+		WHERE community_no = #{replyNo}
+	</update>
+	
+	<delete id="deleteCommunityReply" parameterType="int">
+		DELETE
+		FROM community 
+		WHERE community_no = #{replyNo}
+	</delete>
+	
+	<select id="getReplyListUnderArticle" parameterType="int" resultMap="communityReplySelectMap">
+		SELECT 
+		c.community_no, c.class_no, c.community_content, to_char(to_date(c.reg_date, 'YYYY-MM-DD HH24:MI'), 'YYYY-MM-DD HH24:MI')  as regDate, c.ref_no,
+		u.user_id, u.name, u.nickname, u.profile_image
+		FROM community c, users u
+		WHERE c.user_id = u.user_id
+		AND ref_no = #{articleNo}
+		ORDER BY reg_date
+	</select>
+	
+	
+	<select id="getTotalCountCommunityReply" parameterType="int" resultType="int"> 
+	    select NVL(count(*), 0)
+    	from ( 
+    			select *
+    			from community
+    			WHERE ref_no = #{articleNo}
+    			and community_type = '1'	)
+	</select>
+	
+</mapper>

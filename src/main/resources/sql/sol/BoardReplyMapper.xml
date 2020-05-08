@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardReplyMapper">
+ 	
+ 	<resultMap type="reply" id="replySelectMap">
+ 		<result property="article.articleNo"	column="article_no"			jdbcType="INTEGER" />
+  		<result property="user.userId"			column="user_id"			jdbcType="VARCHAR" />
+  		<result property="user.nickName"		column="nickname"			jdbcType="VARCHAR" />
+		<result property="user.profileImage"	column="profile_image"		jdbcType="VARCHAR" />
+		<result property="replyNo"				column="reply_no"			jdbcType="INTEGER" />
+		<result property="replyContent"			column="reply_content" 		jdbcType="VARCHAR" />
+		<result property="totalReport"			column="total_report"		jdbcType="INTEGER" />
+  		<result property="regDate"				column="reg_date"			jdbcType="VARCHAR" />
+ 	</resultMap>
+
+ 	
+ 	<insert id="addBoardReply" parameterType="reply">
+ 		INSERT INTO reply(article_no, user_id, reply_no, reply_content, reg_date)
+ 		VALUES(#{article.articleNo}, #{user.userId}, seq_reply_reply_no.NEXTVAL, #{replyContent}, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'))
+ 	</insert>
+ 	
+ 	<select id="getBoardReply" parameterType="int" resultMap="replySelectMap">
+ 		SELECT a.article_no, u.user_id, r.reply_no, r.reply_content, r.total_report, r.reg_date 
+		FROM reply r, users u, article a 
+		WHERE r.user_id = u.user_id 
+			  AND r.article_no = a.article_no
+			  AND r.reply_no = #{replyNo}
+ 	</select>
+ 	
+ 	
+ 	<update id="updateBoardReply" parameterType="reply">
+ 		UPDATE reply
+		SET reply_content = #{replyContent}    
+		WHERE reply_no = #{replyNo}
+ 	</update>
+ 	
+ 	
+ 	
+ 	<delete id="deleteBoardReply" parameterType="int">
+ 		DELETE 
+		FROM reply
+		WHERE reply_no = #{replyNo}
+ 	</delete>
+ 	
+ 	
+ 	<select id="getBoardReplyList" parameterType="map" resultMap="replySelectMap">
+		SELECT *
+		FROM (
+		    SELECT inner_table.*, ROWNUM AS row_seq
+		    FROM (
+		        SELECT a.article_no, u.user_id, u.nickname, u.profile_image, r.reply_no, r.reply_content, r.reg_date, r.total_report 
+		        FROM article a, users u, reply r 
+		        WHERE r.user_id = u.user_id 
+		        	  AND r.article_no = a.article_no
+		        	  AND a.article_no = #{articleNo}
+		        ORDER BY r.reply_no
+		    ) inner_table
+		    WHERE ROWNUM &lt;= #{search.endRowNum}
+		)
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}	
+ 	</select>
+ 	
+ 	
+ 	<select id="getBoardReplyTotalCount" parameterType="int" resultType="int">
+ 		SELECT COUNT(*)
+ 		FROM (
+ 			SELECT a.article_no, u.user_id, u.nickname, u.profile_image, r.reply_no, r.reply_content, r.reg_date, r.total_report 
+	        FROM article a, users u, reply r 
+	        WHERE r.user_id = u.user_id 
+	        	  AND r.article_no = a.article_no
+	        	  AND a.article_no = #{articleNo}
+	        ORDER BY r.reply_no
+ 		) count_table
+ 		
+ 	</select>
+ 	
+</mapper>

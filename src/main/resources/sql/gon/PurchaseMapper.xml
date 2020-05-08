@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- //2020-02-24 Git Commit -->
+<mapper namespace="PurchaseMapper">
+ 	
+	<resultMap id="purchaseSelectMap" type="purchase">
+		<result property="purchaseId" 				column="PURCHASE_ID" 		jdbcType="VARCHAR" />
+		<result property="user.userId" 				column="USER_ID" 			jdbcType="VARCHAR" />
+		<result property="hobbyClass.hobbyClassNo" 	column="CLASS_NO" 			jdbcType="NUMERIC" />
+		<result property="dlvyCompany" 				column="DLVY_COMPANY" 		jdbcType="VARCHAR" />
+		<result property="trackingNo" 				column="TRACKING_NO" 		jdbcType="VARCHAR" />
+		<result property="receiverName" 			column="RECEIVER_NAME" 		jdbcType="VARCHAR" />
+		<result property="receiverPhone" 			column="PHONE" 				jdbcType="VARCHAR" />
+		<result property="dlvyAddr" 				column="ADDRESS" 			jdbcType="VARCHAR" />
+		<result property="dlvyDetailAddr" 			column="DETAIL_ADDRESS" 	jdbcType="VARCHAR" />
+		<result property="dlvyPostcode" 			column="POSTCODE" 			jdbcType="VARCHAR" />
+		<result property="dlvyRequest" 				column="DLVY_REQUEST" 		jdbcType="VARCHAR" />
+		<result property="purchasePrice" 			column="PRICE" 				jdbcType="NUMERIC" />
+		<result property="payMethod" 				column="PAY_METHOD" 		jdbcType="CHAR" />
+		<result property="purchaseState" 			column="PURCHASE_CODE" 		jdbcType="CHAR" />
+		<result property="purchaseDate" 			column="PURCHASE_DATE" 		jdbcType="DATE" />
+		<result property="refundDate" 				column="REFUND_DATE" 		jdbcType="DATE" />
+		<result property="componentOption" 			column="COMPONENT_OPTION" 	jdbcType="CHAR" />
+	</resultMap>
+
+	<resultMap id="hobbyclassSelectMap" type="hobbyclass">
+		<result property="hobbyClassNo" 		column="CLASS_NO" 		jdbcType="NUMERIC" />
+		<result property="user.userId" 			column="USER_ID" 		jdbcType="VARCHAR" />
+		<result property="hobbyClassName" 		column="CLASS_TITLE" 	jdbcType="VARCHAR" />
+		<result property="hobbyClassImage" 		column="CLASS_IMAGE" 	jdbcType="VARCHAR" />
+		<result property="hobbyClassIntro" 		column="CLASS_INTRO" 	jdbcType="CLOB" />
+		<result property="hobbyClassPrice" 		column="CLASS_PRICE" 	jdbcType="NUMERIC" />
+		<result property="kitName" 				column="KIT_NAME" 		jdbcType="VARCHAR" />
+		<result property="kitImage" 			column="KIT_IMAGE" 		jdbcType="VARCHAR" />
+		<result property="kitPrice" 			column="KIT_PRICE" 		jdbcType="NUMERIC" />
+		<result property="kitIntro" 		    column="KIT_INTRO" 		jdbcType="VARCHAR" />
+		<result property="startDate" 			column="START_DATE" 	jdbcType="DATE" />
+		<result property="endDate" 				column="END_DATE" 		jdbcType="DATE" />
+		<result property="category" 			column="CATEGORY" 		jdbcType="CHAR" />
+		<result property="hashtag" 				column="HASHTAG_CODE" 	jdbcType="CHAR" />
+		<result property="lessonTotalCount" 	column="TOTAL_LESSON" 	jdbcType="NUMERIC" />
+		<result property="hobbyClassPersonnel" 	column="TOTAL_STUDENT" 	jdbcType="NUMERIC" />
+		<result property="hobbyClassState" 		column="CLASS_STATE" 	jdbcType="CHAR" />
+		<result property="totalMoney" 			column="TOTAL_MONEY" 	jdbcType="NUMERIC" />
+		<result property="steamCount" 			column="TOTAL_STEAM" 	jdbcType="NUMERIC" />
+		<result property="totalGrade" 			column="TOTAL_GRADE" 	jdbcType="NUMERIC" />
+	</resultMap>
+
+	<select id="getComponentOption" parameterType="int" resultMap="hobbyclassSelectMap">
+		SELECT CLASS_NO, CLASS_PRICE, KIT_PRICE, KIT_NAME, CLASS_TITLE, KIT_IMAGE, CLASS_IMAGE, KIT_INTRO
+		FROM HOBBYCLASS
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</select>
+	
+	<select id="getPayment" parameterType="string" resultMap="purchaseSelectMap">
+		SELECT USER_ID, PHONE, ADDRESS, DETAIL_ADDRESS, POSTCODE
+		FROM USERS
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="getPurchase" parameterType="string" resultMap="purchaseSelectMap">
+		SELECT PURCHASE_ID, CLASS_NO, PRICE, PURCHASE_CODE, PAY_METHOD, RECEIVER_NAME, PHONE, ADDRESS, DETAIL_ADDRESS, POSTCODE, DLVY_REQUEST, PURCHASE_DATE, REFUND_DATE, COMPONENT_OPTION, PRICE
+		FROM PURCHASE
+		WHERE PURCHASE_ID = #{purchaseId}
+	</select>
+	
+	<insert id="addPayment" parameterType="purchase">
+		INSERT INTO PURCHASE ( PURCHASE_ID, USER_ID, CLASS_NO, COMPONENT_OPTION, PAY_METHOD, PRICE, PURCHASE_CODE, RECEIVER_NAME, PHONE, ADDRESS, DETAIL_ADDRESS, POSTCODE, DLVY_REQUEST, PURCHASE_DATE )
+		VALUES ( #{purchaseId}, #{user.userId}, #{hobbyClass.hobbyClassNo}, #{componentOption}, #{payMethod}, #{purchasePrice}, 0, #{receiverName}, #{receiverPhone}, #{dlvyAddr:VARCHAR}, #{dlvyDetailAddr:VARCHAR}, #{dlvyPostcode:VARCHAR}, #{dlvyRequest:VARCHAR}, SYSDATE )
+	</insert>
+	
+	<select id="getPaymentHistoryList" parameterType="search" resultMap="purchaseSelectMap">
+		SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT PURCHASE_ID, PURCHASE_CODE, COMPONENT_OPTION, CLASS_NO, PURCHASE_DATE
+										FROM PURCHASE
+										WHERE USER_ID = #{searchKeyword}
+										ORDER BY PURCHASE_DATE DESC	) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	</select>
+	
+	<select id="getTotalPurchase" parameterType="string" resultType="int">
+		SELECT COUNT(PURCHASE_ID)
+		FROM PURCHASE
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="getPurchaseHobbyClass" parameterType="int" resultMap="hobbyclassSelectMap">
+		SELECT CLASS_NO, CLASS_TITLE, CLASS_IMAGE, CLASS_PRICE, KIT_NAME, KIT_PRICE, KIT_IMAGE
+		FROM HOBBYCLASS
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</select>
+	
+	<select id="getDelivery" parameterType="string" resultMap="purchaseSelectMap">
+		SELECT ROWNUM no, search_data.*
+		FROM (
+			SELECT PURCHASE_ID, USER_ID, CLASS_NO, RECEIVER_NAME, PHONE, ADDRESS, DETAIL_ADDRESS, POSTCODE
+			FROM PURCHASE
+			WHERE USER_ID = #{userId}
+			AND COMPONENT_OPTION = '1' ) search_data
+		WHERE ROWNUM = 1
+	</select>
+
+	<update id="requestRefund" parameterType="string">
+		UPDATE PURCHASE
+		<set>
+			PURCHASE_CODE = 3,
+			PRICE = 0
+		</set>
+		WHERE PURCHASE_ID = #{purchaseId}
+	</update>
+	
+	<select id="getLessonNoASC" parameterType="int" resultType="int">
+	SELECT first.LESSON_NO LESSON_NO
+		FROM (	SELECT LESSON_NO, ROWNUM
+				FROM LESSON
+				WHERE CLASS_NO = #{hobbyClassNo}
+				ORDER BY LESSON_NO ASC	) first
+		WHERE ROWNUM = 1	
+	</select>
+	
+	<select id="getPaymentHistoryListAdmin" parameterType="search" resultMap="purchaseSelectMap">
+		SELECT * 
+		FROM (	SELECT ROWNUM no,search_data.* 
+						FROM 	(	SELECT PURCHASE_ID, USER_ID, CLASS_NO, PRICE, PAY_METHOD, COMPONENT_OPTION, PURCHASE_CODE, RECEIVER_NAME, PHONE, ADDRESS, DETAIL_ADDRESS, POSTCODE, DLVY_REQUEST, PURCHASE_DATE, REFUND_DATE, DLVY_COMPANY, TRACKING_NO
+										FROM PURCHASE
+										<if test="searchCondition !='' and searchCondition != null and searchCondition == 'purchaseState'">
+										WHERE PURCHASE_CODE = #{searchKeyword}
+										</if>
+										<if test="searchCondition !='' and searchCondition != null and searchCondition == 'all'">
+										WHERE PURCHASE_ID LIKE '%${searchKeyword}%'
+										OR USER_ID LIKE '%${searchKeyword}%'
+										OR CLASS_NO LIKE '%${searchKeyword}%'
+										OR PRICE LIKE '%${searchKeyword}%'
+										OR PURCHASE_CODE LIKE '%${searchKeyword}%'
+															  <if test="searchKeyword == '구매 완료'">OR PURCHASE_CODE LIKE '%0%'</if>
+															  <if test="searchKeyword == '배송 중'">OR PURCHASE_CODE LIKE '%1%'</if>
+															  <if test="searchKeyword == '배송 완료'">OR PURCHASE_CODE LIKE '%2%'</if>
+															  <if test="searchKeyword == '환불 대기'">OR PURCHASE_CODE LIKE '%3%'</if>
+															  <if test="searchKeyword == '환불 완료'">OR PURCHASE_CODE LIKE '%4%'</if>	
+															  <if test="searchKeyword == '완료'">OR PURCHASE_CODE LIKE '%0%' 
+															  									OR PURCHASE_CODE LIKE '%2%'															  
+															  									OR PURCHASE_CODE LIKE '%4%'</if>	
+															  <if test="searchKeyword == '구매'">OR PURCHASE_CODE LIKE '%0%'</if>				   
+															  <if test="searchKeyword == '운송장'">OR (COMPONENT_OPTION = '1' AND PURCHASE_CODE = '0')
+															  									</if>				   
+										OR PAY_METHOD LIKE '%${searchKeyword}%'
+														   <if test="searchKeyword == '카드'">OR PAY_METHOD LIKE '%0%'</if>				   
+														   <if test="searchKeyword == '휴대폰'">OR PAY_METHOD LIKE '%1%'</if>				   
+														   <if test="searchKeyword == '휴대'">OR PAY_METHOD LIKE '%1%'</if>
+										OR RECEIVER_NAME LIKE '%${searchKeyword}%'
+										OR PHONE LIKE '%${searchKeyword}%'
+										OR ADDRESS LIKE '%${searchKeyword}%'
+										OR DETAIL_ADDRESS LIKE '%${searchKeyword}%'
+										OR POSTCODE LIKE '%${searchKeyword}%'
+										OR DLVY_REQUEST LIKE '%${searchKeyword}%'
+										OR PURCHASE_DATE LIKE '%${searchKeyword}%'
+										OR REFUND_DATE LIKE '%${searchKeyword}%'
+										OR DLVY_COMPANY LIKE '%${searchKeyword}%'
+										OR TRACKING_NO LIKE '%${searchKeyword}%'
+										OR COMPONENT_OPTION LIKE '%${searchKeyword}%'
+										</if>
+										
+									ORDER BY PURCHASE_DATE DESC	) search_data
+						WHERE ROWNUM &lt;= #{endRowNum}
+						<if test="category !='' and category != null">
+							AND search_data.PURCHASE_CODE = #{category}
+						</if> )
+		WHERE no BETWEEN #{startRowNum} AND #{endRowNum}			
+	</select>
+	
+	<select id="getPurchaseTotalCountAdmin" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM(	SELECT * 
+					FROM(	SELECT PURCHASE_ID, PURCHASE_CODE
+										FROM PURCHASE
+										
+											<if test="totalCountPurchase !='' and totalCountPurchase != null and totalCountPurchase == '전체'"></if>
+											<if test="totalCountPurchase !='' and totalCountPurchase != null and totalCountPurchase == '구매'">
+												WHERE PURCHASE_CODE = '0'
+												OR PURCHASE_CODE = '1'
+												OR PURCHASE_CODE = '2'
+											</if>
+											<if test="totalCountPurchase !='' and totalCountPurchase != null and totalCountPurchase == '환불'">
+												WHERE PURCHASE_CODE = '3'
+												OR PURCHASE_CODE = '4'
+											</if>
+											<if test="purchaseState !='' and purchaseState != null and purchaseState == 0">
+												WHERE PURCHASE_CODE = '0'
+											</if>
+											<if test="purchaseState !='' and purchaseState != null and purchaseState == 1">
+												WHERE PURCHASE_CODE = '1'
+											</if>
+											<if test="purchaseState !='' and purchaseState != null and purchaseState == 2">
+												WHERE PURCHASE_CODE = '2'
+											</if>
+											<if test="purchaseState !='' and purchaseState != null and purchaseState == 3">
+												WHERE PURCHASE_CODE = '3'
+											</if>
+											<if test="purchaseState !='' and purchaseState != null and purchaseState == 4">
+												WHERE PURCHASE_CODE = '4'
+											</if>
+											<if test="all !='' and all != null and all == 1">
+												WHERE PURCHASE_ID LIKE '%${searchKeyword}%'
+												OR USER_ID LIKE '%${searchKeyword}%'
+												OR CLASS_NO LIKE '%${searchKeyword}%'
+												OR PRICE LIKE '%${searchKeyword}%'
+												OR PURCHASE_CODE LIKE '%${searchKeyword}%'
+																	  <if test="searchKeyword == '구매 완료'">OR PURCHASE_CODE LIKE '%0%'</if>
+																	  <if test="searchKeyword == '배송 중'">OR PURCHASE_CODE LIKE '%1%'</if>
+																	  <if test="searchKeyword == '배송 완료'">OR PURCHASE_CODE LIKE '%2%'</if>
+																	  <if test="searchKeyword == '환불 대기'">OR PURCHASE_CODE LIKE '%3%'</if>
+																	  <if test="searchKeyword == '환불 완료'">OR PURCHASE_CODE LIKE '%4%'</if>	
+																	  <if test="searchKeyword == '완료'">OR PURCHASE_CODE LIKE '%0%' 
+																	  									OR PURCHASE_CODE LIKE '%2%'															  
+																	  									OR PURCHASE_CODE LIKE '%4%'</if>	
+																	  <if test="searchKeyword == '구매'">OR PURCHASE_CODE LIKE '%0%'</if>
+																	  <if test="searchKeyword == '운송장'">OR (COMPONENT_OPTION = '1' AND PURCHASE_CODE = '0')
+															  									</if>					   
+												OR PAY_METHOD LIKE '%${searchKeyword}%'
+																   <if test="searchKeyword == '카드'">OR PAY_METHOD LIKE '%0%'</if>				   
+																   <if test="searchKeyword == '휴대폰'">OR PAY_METHOD LIKE '%1%'</if>				   
+																   <if test="searchKeyword == '휴대'">OR PAY_METHOD LIKE '%1%'</if>
+												OR RECEIVER_NAME LIKE '%${searchKeyword}%'
+												OR PHONE LIKE '%${searchKeyword}%'
+												OR ADDRESS LIKE '%${searchKeyword}%'
+												OR DETAIL_ADDRESS LIKE '%${searchKeyword}%'
+												OR POSTCODE LIKE '%${searchKeyword}%'
+												OR DLVY_REQUEST LIKE '%${searchKeyword}%'
+												OR PURCHASE_DATE LIKE '%${searchKeyword}%'
+												OR REFUND_DATE LIKE '%${searchKeyword}%'
+												OR DLVY_COMPANY LIKE '%${searchKeyword}%'
+												OR TRACKING_NO LIKE '%${searchKeyword}%'
+												OR COMPONENT_OPTION LIKE '%${searchKeyword}%'
+											</if>	) countTable
+											
+						<if test="category !='' and category != null">
+							WHERE PURCHASE_CODE = #{category}
+						</if>					
+																	) doubleStap
+						
+	</select>
+	
+	<update id="updateRefund" parameterType="string">
+		UPDATE PURCHASE
+		<set>
+			PURCHASE_CODE = 4,
+			REFUND_DATE = SYSDATE
+		</set>
+		WHERE PURCHASE_ID = #{purchaseId}
+	</update>
+	
+	<update id="addDeliveryInfo" parameterType="purchase">
+		UPDATE PURCHASE
+		<set>
+			DLVY_COMPANY = #{dlvyCompany},
+			TRACKING_NO = #{trackingNo}
+		</set>
+		WHERE PURCHASE_ID = #{purchaseId}
+	</update>
+	
+	<select id="getMoneyAnalysisSum" parameterType="string" resultType="string">
+		SELECT SUM(PRICE) 
+		FROM PURCHASE
+		WHERE PURCHASE_DATE = #{date}
+	</select>
+	
+	<select id="getMoneyAnalysisAvg" parameterType="map" resultType="int">
+		SELECT AVG(PRICE)
+		FROM PURCHASE p
+		<if test="what == '800'">
+			, (SELECT CLASS_NO , USER_ID
+				FROM HOBBYCLASS 
+				WHERE CATEGORY = #{keyWord}) h
+		</if>
+		WHERE 
+		<if test="what == '100'">
+			p.USER_ID = #{keyWord}
+		</if>
+		<if test="what == '500'">
+			p.CLASS_NO = #{keyWord}
+		</if>
+		<if test="what == '800'">
+			p.CLASS_NO = h.CLASS_NO
+			AND p.USER_ID = h.USER_ID
+		</if>
+	</select>
+	
+	<select id="getMoneyAnalysisCount" parameterType="map" resultType="int">
+		SELECT COUNT(PRICE)
+		FROM PURCHASE p
+		<if test="what == '800'">
+			, (SELECT CLASS_NO , USER_ID
+				FROM HOBBYCLASS 
+				WHERE CATEGORY = #{keyWord}) h
+		</if>
+		WHERE 
+		<if test="what == '100'">
+			p.USER_ID = #{keyWord}
+		</if>
+		<if test="what == '500'">
+			p.CLASS_NO = #{keyWord}
+		</if>
+		<if test="what == '800'">
+			p.CLASS_NO = h.CLASS_NO
+			AND p.USER_ID = h.USER_ID
+		</if>
+	</select>
+	
+	<select id="getCreatorList" resultType="string">
+		SELECT USER_ID
+		FROM USERS
+		WHERE ROLE = 1
+	</select>
+	
+	<insert id="startingPurchaseData" parameterType="purchase">
+		INSERT INTO PURCHASE ( PURCHASE_ID, USER_ID, CLASS_NO, COMPONENT_OPTION, PAY_METHOD, PRICE, PURCHASE_CODE, RECEIVER_NAME, PHONE, PURCHASE_DATE )
+		VALUES ( #{purchaseId}, #{user.userId}, #{hobbyClass.hobbyClassNo}, #{componentOption}, #{payMethod}, #{purchasePrice}, 0, #{receiverName}, #{receiverPhone}, #{purchaseDate} )
+	</insert>
+
+</mapper>

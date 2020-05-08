@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UserMapper">
+ 	
+ 	<resultMap id="userSelectMap" type="user">
+ 		<result property="userId"		column = "user_id" 		jdbcType="VARCHAR"/>
+ 		<result property="name" 	column = "name"			jdbcType="VARCHAR"/>
+ 		<result property="nickName" 	column="nickname"	jdbcType="VARCHAR"/>
+ 		<result property="password"		column="password"	jdbcType="VARCHAR"/>
+ 		<result property="birth"		column="birth_date"		jdbcType="VARCHAR"/>
+ 		<result property="phone"		column="phone"			jdbcType="VARCHAR"/>
+ 		<result property="sex"			column="sex"			jdbcType="VARCHAR"/>
+ 		<result property="address"		column="address"		jdbcType="VARCHAR"/>
+ 		<result property="detailAddress" 	column="detail_address"		jdbcType="VARCHAR"/>
+ 		<result property="postCode"		column="postcode"		jdbcType="VARCHAR"/>
+ 		<result property="role"			column="role"			jdbcType="CHAR"/>
+ 		<result property="profileImage"		column="profile_image"		jdbcType="VARCHAR"/>
+ 		<result property="totalReport"		column="total_report"		jdbcType="INTEGER"/>
+ 		<result property="reasonCode"		column="reason_code"		jdbcType="CHAR"/>
+ 		<result property="retireDate"		column="retire_date"		jdbcType="DATE"/>
+ 		<result property="stopDate"		column="stop_date"			jdbcType="DATE"/>
+ 		<result property="addDate"		column="add_date"			jdbcType="DATE"/> 	
+ 	</resultMap>
+ 	
+ 	<insert id="addUser"		parameterType="user">
+ 		INSERT
+ 		INTO users(user_id,name,nickname,password,birth_date,phone,sex,address,detail_address,postcode,role,profile_image,add_date)
+ 		VALUES (#{userId},#{name},#{nickName:VARCHAR},#{password},#{birth:VARCHAR},#{phone:VARCHAR},#{sex:VARCHAR},#{address:VARCHAR},#{detailAddress:VARCHAR},#{postCode:VARCHAR},'0',#{profileImage:VARCHAR},SYSDATE)
+ 	
+ 	</insert>
+ 	
+ 	<insert id="addHashtag" parameterType="hashmap">
+ 		INSERT
+ 		INTO hashtag(hashtag_no,user_id,hashtag_code)
+ 		VALUES (seq_hashtag_hashtag_no.NEXTVAL,#{userId},#{hashCode})
+ 	
+ 	</insert>
+ 	
+ 	<select id="getUser"   parameterType="String" resultMap="userSelectMap">
+ 		SELECT
+ 		user_id,name,nickname,password,birth_date,phone,sex,address,detail_address,postcode,role,profile_image,add_date, total_report 
+ 		FROM users
+ 		WHERE user_id = #{value}
+ 	</select>
+ 	<select id="getUserHashtag" parameterType="String" resultType="String">
+ 		SELECT
+ 		hashtag_code 
+ 		FROM hashtag
+ 		WHERE user_id = #{value}
+ 	</select>
+ 	<update id="deleteUser" parameterType="user">
+ 		UPDATE users
+ 		<set>
+ 		role = '9',
+ 		reason_code = #{reasonCode},
+ 		retire_date = SYSDATE
+ 		</set>
+ 		WHERE user_id = #{userId}
+ 	</update>
+ 	<update id="stopUser" parameterType="user">
+ 		UPDATE users
+ 		<set>
+ 		role = '8',
+ 		reason_code = #{reasonCode},
+ 		stop_date = SYSDATE
+ 		</set>
+ 		WHERE user_id = #{userId}
+ 	</update>
+ 	<update id="removeStopUser" parameterType="user">
+ 		UPDATE users
+ 		<set>
+ 		role = '0',
+ 		reason_code = null,
+ 		stop_date = null
+ 		</set>
+ 		WHERE user_id = #{userId}
+ 	</update>
+ 	<update id="removeRetireUser" parameterType="user">
+ 		UPDATE users
+ 		<set>
+ 		role = '0',
+ 		reason_code = null,
+ 		retire_date = null
+ 		</set>
+ 		WHERE user_id = #{userId}
+ 	</update>
+ 	<update id="updateUser" parameterType="user">
+ 		UPDATE users
+ 		<set>
+ 		name = #{name},
+ 		birth_date = #{birth:VARCHAR},
+ 		address = #{address:VARCHAR},
+ 		detail_address = #{detailAddress:VARCHAR},
+ 		postcode = #{postCode:VARCHAR},
+ 		phone = #{phone:VARCHAR},
+ 		sex = #{sex:VARCHAR},
+ 		nickname = #{nickName:VARCHAR},
+ 		profile_image = #{profileImage:VARCHAR} 		
+ 		</set>
+ 		WHERE user_id = #{userId}
+ 	</update>
+ 	
+ 	
+ 	<delete id="deleteHashtag" parameterType="String">
+ 		DELETE hashtag
+ 		WHERE user_id = #{value} 	
+ 	</delete>
+ 	
+ 	<update id="changeUserCreator" parameterType="user">
+ 		UPDATE users
+ 		<set>
+ 		role= '1'
+ 		</set>
+ 		WHERE user_id=#{userId}
+ 	</update>
+ 	<select id="getUserList" parameterType="search" resultMap="userSelectMap">
+ 	 SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		( 	SELECT user_id , name ,birth_date, add_date, role,retire_date,stop_date
+											FROM users
+											<if test="searchKeyword == '' and searchCondition != null and searchCondition != 3 ">
+												<where>													
+										 					role = #{searchCondition}										 																
+												</where>
+											</if>
+											<if test="searchKeyword != '' and searchCondition != null">
+												<where>																		
+										 				<if test="searchCondition != 3">
+										 				role = #{searchCondition} AND UPPER(user_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+										 				</if>
+										 				<if test="searchCondition == 3">
+										 				 UPPER(user_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+										 				</if>
+												</where>											
+											</if>
+											<if test="searchKeyword != null and searchCondition == null">
+												<where>							
+										 				
+										 				 UPPER(user_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+										 				
+												</where>											
+											</if>
+											
+																						
+											ORDER BY user_id ) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+ 	
+ 	</select>
+ 	<select id="getUserTotalCount" parameterType="search" resultType="int">
+ 	SELECT COUNT(*)
+ 	FROM(SELECT * FROM users 
+ 								<if test="searchKeyword == '' and searchCondition != null and searchCondition != 3 ">
+												<where>													
+										 					role = #{searchCondition}										 																
+												</where>
+											</if>
+											<if test="searchKeyword != '' and searchCondition != null">
+												<where>																		
+										 				<if test="searchCondition != 3">
+										 				role = #{searchCondition} AND UPPER(user_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+										 				</if>
+										 				<if test="searchCondition == 3">
+										 				 UPPER(user_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+										 				</if>
+												</where>											
+											</if>
+											<if test="searchKeyword != null and searchCondition == null">
+												<where>							
+										 				
+										 				 UPPER(user_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+										 				
+												</where>											
+											</if>
+											ORDER BY user_id) count_table
+ 	</select>
+ 	<select id="getUserAllCount" parameterType="search" resultType="int">
+ 	SELECT count(*)
+ 	FROM users	
+ 	</select>
+ 	
+ 	<select id="getUserCount" parameterType="search" resultType="int">
+ 	SELECT count(*)
+ 	FROM users
+ 	<where>  
+ 	role='0'
+ 	</where>	
+ 	</select>
+ 	
+ 	<select id="getCreatorCount" parameterType="search" resultType="int">
+ 	SELECT count(*)
+ 	FROM users
+ 	<where>  
+ 	role='1'
+ 	</where>	
+ 	</select>
+ 	
+ 	<select id="getStopUserCount" parameterType="search" resultType="int">
+ 	SELECT count(*)
+ 	FROM users
+ 	<where>  
+ 	role='8'
+ 	</where>	
+ 	</select>
+ 	
+ 	<select id="getRetireUserCount" parameterType="search" resultType="int">
+ 	SELECT count(*)
+ 	FROM users
+ 	<where>  
+ 	role='9'
+ 	</where>	
+ 	</select>
+ 	
+ 	<update id="updateNewPassword"	parameterType="user">
+ 		UPDATE users
+ 		<set>
+ 		password = #{password}
+ 		</set>
+ 		WHERE user_id = #{userId}
+ 	
+ 	</update>
+ 	
+ 	
+</mapper>

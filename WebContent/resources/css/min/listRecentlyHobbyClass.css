@@ -1,0 +1,81 @@
+#recentlyCardImage img {
+	-webkit-transform:scale(1);
+	-moz-transform:scale(1);
+	-ms-transform:scale(1);	
+	-o-transform:scale(1);	
+	transform:scale(1);
+	-webkit-transition:.3s;
+	-moz-transition:.3s;
+	-ms-transition:.3s;
+	-o-transition:.3s;
+	transition:.3s;
+	cursor: pointer;
+}
+
+#recentlyCardImage:hover img {
+	-webkit-transform:scale(1.2);
+	-moz-transform:scale(1.2);
+	-ms-transform:scale(1.2);	
+	-o-transform:scale(1.2);
+	transform:scale(1.2);
+}
+
+#recentlyCardImage { overflow: hidden; }
+
+.wrapper-basic {
+   	background-color: #8C8C8C;
+   	color: white;
+}
+
+.wrapper-yello {
+	background-color: #FD7E14;
+   	color: white;
+}
+
+.fa-heart {
+	color : red;
+}
+
+.outer-card-image {
+	position : absolute;
+    top : 8px;
+    left : 8px;
+    display : flex;
+    flex-direction : column;
+    -webkit-box-pack : center;
+    justify-content : center;
+    -webkit-box-align : center;
+    align-items : center;
+    width : 56px;
+    height : 56px;
+    z-index : 100;
+    background-color : rgb(253, 126, 20);
+    border-radius : 100%;
+}
+
+.inner-card-top-text { 
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+    color: rgb(255, 255, 255);
+}
+
+.inner-card-bottom-text {
+    margin-top: 2px;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    color: rgb(255, 216, 168);
+}
+
+.recently-hobby-class-list-h4-tag {
+	font-size: 24px;
+    font-weight: bold;
+    color: rgb(62, 64, 66);
+    line-height: 32px;
+    letter-spacing: -0.4px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0px;
+    overflow: hidden;
+}

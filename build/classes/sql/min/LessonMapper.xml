@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="LessonMapper">
+ 	<resultMap id="lessonTimesMap" type="lessonTimes">
+		<result property="timeNo" 								column="time_no"		jdbcType="INTEGER" />
+		<result property="user.userId"							column="user_id"		jdbcType="VARCHAR" />
+		<result property="lesson.lessonNo"  					column="lesson_no"      jdbcType="INTEGER" />
+		<result property="lesson.hobbyClass.hobbyClassNo" 		column="class_no" 		jdbcType="INTEGER" />
+		<result property="lesson.hobbyClass.hobbyClassName" 	column="class_title" 	jdbcType="VARCHAR" />
+		<result property="lesson.hobbyClass.hobbyClassImage" 	column="class_image" 	jdbcType="VARCHAR" />
+		<result property="lesson.lessonTitle"					column="lesson_title"	jdbcType="VARCHAR" />
+		<result property="lesson.lessonImage"					column="lesson_image"	jdbcType="VARCHAR" />
+		<result property="lesson.lessonIntro"			 		column="lesson_intro"	jdbcType="VARCHAR" />
+		<result property="lesson.lessonContent"					column="lesson_content" jdbcType="CLOB"		javaType="java.lang.String" />
+		<result property="lesson.lessonProject"		 			column="lesson_project" jdbcType="VARCHAR" />
+		<result property="lesson.lessonVideo"		 			column="lesson_video"	jdbcType="VARCHAR" />
+		<result property="lesson.totalCount"	 	 	 		column="total_count"	jdbcType="INTEGER" />
+		<result property="lesson.currentCount" 		 			column="row_seq" 	 	jdbcType="INTEGER" />
+		<result property="currentTimes"  						column="current_times"  jdbcType="INTEGER" />
+		<result property="totalTimes"  							column="total_times" 	jdbcType="INTEGER" />
+		<result property="maxTimes" 							column="max_times" 		jdbcType="INTEGER" />
+	</resultMap>	
+	
+	<resultMap id="lessonReplyMap" type="reply">
+		<result property="replyNo" 			column="reply_no"		jdbcType="INTEGER" />
+		<result property="lesson.lessonNo"	column="lesson_no"		jdbcType="INTEGER" />
+		<result property="user.userId"		column="user_id"		jdbcType="VARCHAR" />
+		<result property="user.nickName"  	column="nickname"       jdbcType="VARCHAR" />
+		<result property="replyContent"		column="reply_content"	jdbcType="VARCHAR" />
+		<result property="regDate"	 		column="reg_date"	 	jdbcType="VARCHAR" />
+		<result property="totalReport" 	 	column="total_report" 	jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="searchLessonMap" type="lesson">
+		<result property="lessonNo" 		column="lesson_no"		jdbcType="INTEGER" />
+		<result property="lessonTitle"		column="lesson_title"	jdbcType="VARCHAR" />
+		<result property="lessonImage"		column="lesson_image"	jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getLesson" parameterType="java.util.Map" resultMap="lessonTimesMap">
+		SELECT  
+		* 
+		FROM ( 
+		        SELECT 
+		        ROWNUM row_seq, inner_table.* 
+		        FROM ( 
+		                SELECT 
+		                l.lesson_no, l.class_no, l.lesson_video, l.lesson_content, l.lesson_project, l.lesson_image, l.lesson_intro, l.lesson_title, 
+		                sum.total_count, lt.time_no, lt.user_id, lt.current_times, lt.total_times, lt.max_times, hc.class_title, hc.class_image  
+		                FROM lesson l, (
+		                                    SELECT 
+		                                    class_no, COUNT(lesson_no) total_count 
+		                                    FROM lesson
+		                                    GROUP BY class_no 
+		                               ) sum, (
+		                                         SELECT 
+		                                         lesson_no, time_no, user_id, current_times, total_times, max_times 
+		                                         FROM lesson_times 
+		                                         WHERE user_id = #{userId} 
+		                                      ) lt , (	
+														 SELECT 
+														 class_no, class_title, class_image 
+														 FROM hobbyClass 		                                      			
+		                                      		  ) hc 
+		                WHERE l.class_no = sum.class_no 
+		                      AND l.lesson_no = lt.lesson_no(+) 
+		                      AND l.class_no = #{hobbyClassNo} 
+		                      AND l.class_no = hc.class_no 
+		                ORDER BY l.lesson_no ASC                  
+		             ) inner_table 
+		     ) 
+		 WHERE lesson_no = #{lessonNo}    
+	</select>
+	
+	<select id="getArrowLesson" parameterType="java.util.Map" resultMap="lessonTimesMap">
+		SELECT  
+		* 
+		FROM ( 
+		        SELECT 
+		        ROWNUM row_seq, inner_table.* 
+		        FROM ( 
+		                SELECT 
+		                l.lesson_no, l.class_no, l.lesson_video, l.lesson_content, l.lesson_project, l.lesson_image, l.lesson_intro, l.lesson_title, 
+		                sum.total_count, lt.time_no, lt.user_id, lt.current_times, lt.total_times, lt.max_times, hc.class_title, hc.class_image   
+		                FROM lesson l, (
+		                                    SELECT 
+		                                    class_no, COUNT(lesson_no) total_count 
+		                                    FROM lesson
+		                                    GROUP BY class_no 
+		                               ) sum, (
+		                                         SELECT 
+		                                         lesson_no, time_no, user_id, current_times, total_times, max_times 
+		                                         FROM lesson_times 
+		                                         WHERE user_id = #{userId} 
+		                                      ) lt , (	
+														 SELECT 
+														 class_no, class_title, class_image 
+														 FROM hobbyClass 		                                      			
+		                                      		  ) hc 
+		                WHERE l.class_no = sum.class_no 
+		                      AND l.lesson_no = lt.lesson_no(+) 
+		                      AND l.class_no = #{hobbyClassNo} 
+		                      AND l.class_no = hc.class_no 
+		                ORDER BY l.lesson_no ASC                  
+		             ) inner_table 
+		     ) 
+		WHERE row_seq = #{search.currentPage}  
+	</select>
+	
+	<insert id="addLessonReply" parameterType="reply">
+		INSERT 
+		INTO lesson_reply( reply_no, lesson_no, user_id, reply_content, reg_date )  
+		VALUES( seq_lesson_lesson_reply_no.nextval, #{lesson.lessonNo}, #{user.userId}, #{replyContent}, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'))  
+	</insert>
+	
+	<update id="updateLessonReply" parameterType="reply">
+		UPDATE 
+		lesson_reply 
+		SET reply_content = #{replyContent} 
+		WHERE reply_no = #{replyNo} 
+	</update>
+	
+	<delete id="deleteLessonReply" parameterType="java.lang.Integer">
+		DELETE 
+		FROM lesson_reply 
+		WHERE reply_no = #{replyNo} 
+	</delete>
+	
+	<sql id="lessonReplyList">
+		SELECT 
+		r.reply_no, r.lesson_no, u.user_id, u.nickname, r.reply_content, r.reg_date, r.total_report 
+		FROM lesson_reply r, users u
+		WHERE lesson_no = #{lessonNo} 
+		      AND r.user_id = u.user_id 
+		ORDER BY reply_no DESC 
+	</sql>
+	
+	<select id="getLessonReplyList" parameterType="java.util.Map" resultMap="lessonReplyMap">
+		SELECT * 
+		FROM (   SELECT inner_table.* , ROWNUM AS row_seq 
+				 FROM       (   
+				 			 	 <include refid="lessonReplyList" /> 
+					  	 		) inner_table  
+					  	 		<where>
+									 	ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+								</where>        )
+						<where>
+						     row_seq BETWEEN (#{search.currentPage} - 1 ) * #{search.pageSize} + 1 AND #{search.currentPage} * #{search.pageSize}   
+			            </where>	
+	</select>
+	
+	<select id="getLessonReplyListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="lessonReplyList" />
+				 	) countTable
+	</select>
+	
+	<insert id="addLessonTimes" parameterType="java.util.Map">
+		INSERT 
+		INTO lesson_times( time_no, lesson_no, user_id, current_times, total_times, max_times, class_no )  
+		VALUES( seq_lesson_lesson_times_no.nextval, #{lessonNo}, #{userId}, 0, 0, 0, #{hobbyClassNo} ) 
+	</insert>
+	
+	<update id="updateLessonTimes" parameterType="java.util.Map">
+		UPDATE 
+		lesson_times 
+		SET current_times = #{currentTimes}, max_times = #{maxTimes}, total_times = #{totalTimes}  
+		WHERE lesson_no = #{lessonNo} 
+		      AND user_id = #{userId}
+		      AND class_no = #{hobbyClassNo}  
+	</update>
+	
+	<select id="getLessonReply" parameterType="java.lang.Integer" resultMap="lessonReplyMap">
+		SELECT 
+		r.reply_no, r.lesson_no, u.user_id, u.nickname, r.reply_content, r.reg_date, r.total_report 
+		FROM lesson_reply r, users u 
+		WHERE r.reply_no = #{replyNo} 
+		      AND r.user_Id = u.user_id 
+	</select>
+	
+	<update id="updateLessonReplyTotalReport" parameterType="java.util.Map">
+		UPDATE 
+		lesson_reply 
+		SET total_report = #{totalReport} 
+		WHERE reply_no = #{replyNo}  
+	</update>
+	
+	<select id="getLesssonList"	parameterType="java.lang.Integer" resultMap="searchLessonMap">
+		SELECT 
+		lesson_no, class_no, lesson_video, lesson_content, lesson_project, lesson_intro, lesson_image, lesson_title
+		FROM lesson
+		WHERE class_no = #{hobbyClassNo} 
+	</select>
+	
+	<select id="getLesssonListTotalCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				SELECT 
+				lesson_no, lesson_image, lesson_title
+				FROM lesson
+				WHERE class_no = #{hobbyClassNo} 
+				 	) countTable
+	</select>
+	
+	<select id="getLessonTimesCheck" parameterType="java.util.Map" resultMap="lessonTimesMap">
+		SELECT 
+		user_id, time_no 
+		FROM lesson_times 
+		WHERE user_id = #{userId} 
+			  AND lesson_no = #{lessonNo}  
+	</select>
+</mapper>

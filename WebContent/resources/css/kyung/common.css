@@ -1,0 +1,104 @@
+/* 공통 CSS */
+
+/* Color Theme Swatches in Hex */
+/*
+    .일러스트레이션-1-hex { color: #F2D64B; }
+    .일러스트레이션-2-hex { color: #F2B33D; }
+    .일러스트레이션-3-hex { color: #F2F2F2; }
+    .일러스트레이션-4-hex { color: #8C8C8C; }
+    .일러스트레이션-5-hex { color: #0D0D0D; }
+    */
+/* Color Theme Swatches in RGBA */
+/*
+.일러스트레이션-1-rgba { color: rgba(242, 214, 75, 1); }
+.일러스트레이션-2-rgba { color: rgba(242, 178, 60, 1); }
+.일러스트레이션-3-rgba { color: rgba(242, 242, 242, 1); }
+.일러스트레이션-4-rgba { color: rgba(140, 140, 140, 1); }
+.일러스트레이션-5-rgba { color: rgba(12, 12, 12, 1); }
+*/
+
+
+
+/*웹폰트 적용*/
+*,
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+a,
+ul,
+li,
+ol,
+div,
+span,
+input,
+textarea,
+table,
+th,
+tr,
+td,
+nav,
+header,
+article,
+footer,
+select,
+small {
+    font-family: "Nanum Gothic"
+}
+
+
+
+
+/* 기본 버튼 */
+.btn-basic {
+    background-color: #F2B33D;
+    color: white;
+}
+
+.btn-basic:hover {
+    background-color: #F2D64B;
+    color: white;
+
+}
+
+.btn-outline-basic {
+    border: 1px solid #F2B33D;
+    color: #F2B33D;
+}
+
+.btn-outline-basic:hover {
+    background-color: #F2B33D;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+a.page-link,
+a.page-link * {
+    color: #0D0D0D;
+    border: 1px solid transparent;
+}
+
+a.page-link:hover {
+    color: #F2B33D;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-bottom-color: #F2B33D;
+}
+
+
+a.page-link .fa-angle-right,
+a.page-link .fa-angle-left {
+    color: #8C8C8C;
+}

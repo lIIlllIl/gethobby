@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 2020-02-19 Git Commit -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:task="http://www.springframework.org/schema/task"
+		xsi:schemaLocation=
+				"http://www.springframework.org/schema/beans 
+				http://www.springframework.org/schema/beans/spring-beans.xsd
+				
+				http://www.springframework.org/schema/context 
+				http://www.springframework.org/schema/context/spring-context.xsd
+				
+				http://www.springframework.org/schema/mvc
+				http://www.springframework.org/schema/mvc/spring-mvc.xsd
+				http://www.springframework.org/schema/task 
+				http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+    
+    <!-- Spring 공통설정 관리 common-servlet.xml -->
+       
+    <!--  Annotation 설정
+    	  include == 사용
+    	  exclude == 비사용  -->
+    	  
+	<context:component-scan base-package="com.gethobby.web">
+		<context:include-filter 	type="annotation"	expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter 	type="annotation" 	expression="org.springframework.stereotype.Service"/>
+		<context:exclude-filter 	type="annotation" 	expression="org.springframework.stereotype.Repository"/>
+	</context:component-scan> 
+	
+	
+   	<!-- ■ DefaultAnnotationHandlerMapping 설정 등 기타 Annotation 기반 모든 기능을 사용 할 수 있는 아래의 설정으로 변경 -->
+	<mvc:annotation-driven />
+
+   	<mvc:interceptors>
+		
+   		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/images/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<bean class="com.gethobby.common.web.LogonCheckInterceptor" />
+   		</mvc:interceptor>
+
+   	</mvc:interceptors>
+
+	<!--  :: ViewResolver 선언 -->	
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	
+	<!--	
+		■ / 형식의 Mapping 은 모든(정적,동적 자원) 요청시 처리책임
+		■ 정적자원 요청시 DispatcherServlet 에게 처리방법지정
+	    ■ 정적자원요청 (아래의 URI 포함 요청)시  처리 경로 location 지정
+	     	
+	    실제 PJT 진행시 일반적으로 resources 폴더를 만들고 폴더내부에
+	     css , image, js 등 넣어 관리하며 아래와 같이 1번의 설정으로 관리
+	     <mvc:resources mapping="/resources/**" location="/resources/" />
+	--> 
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/images/**" location="C:/images/*" />
+	
+	<!-- 	:: exception resolver  선언 :: 서술적 / 선언적 예외처리 
+			:: Servlet 에서의 선언적 예외처리를 다시 생각하며....  -->
+	<bean id="exceptionResolver"
+				class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.NullPointerException">/common/nullError.jsp</prop>
+				<prop key="java.lang.NumberFormatException">/common/numberFormatError.jsp</prop>
+			</props>
+		</property>
+		
+		<property name="defaultErrorView"	value="/common/error.jsp" />
+		
+	</bean>
+
+	 
+	<!-- javax mail 설정
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="" />
+		<property name="password" value="" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+	-->
+	
+	<!-- Spring Scheduler -->
+	<task:annotation-driven/>
+	
+</beans>

@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="HobbyClassMapper">
+
+ 	<resultMap id="hobbyClassMap" type="hobbyClass">
+ 		<result property="hobbyClassNo" 						column="class_no" 					jdbcType="INTEGER" />
+ 		<result property="user.userId" 							column="user_id" 					jdbcType="VARCHAR" />
+ 		<result property="user.nickName"  	 					column="nickname"       			jdbcType="VARCHAR" />
+ 		<result property="user.profileImage" 					column="profile_image" 				jdbcType="VARCHAR" />
+ 		<result property="user.role" 							column="role" 						jdbcType="VARCHAR" />
+ 		<result property="hobbyClassName"   					column="class_title" 				jdbcType="VARCHAR" />
+ 		<result property="hobbyClassImage" 						column="class_image" 				jdbcType="VARCHAR" />
+ 		<result property="hobbyClassIntro"  					column="class_intro"    			jdbcType="CLOB" 	javaType="java.lang.String"/>
+ 		<result property="hobbyClassPrice"  					column="class_price"  				jdbcType="INTEGER" />
+ 		<result property="kitName" 								column="kit_name" 	 				jdbcType="VARCHAR" />
+ 		<result property="kitImage" 	 						column="kit_image" 	 				jdbcType="VARCHAR" />
+ 		<result property="kitPrice" 	 						column="kit_price" 	 				jdbcType="INTEGER" />
+ 		<result property="kitIntro" 	 						column="kit_intro" 	 				jdbcType="VARCHAR" />
+ 		<result property="startDate" 	 						column="start_date"  				jdbcType="DATE"    />
+ 		<result property="endDate" 	 	  						column="end_date" 	 				jdbcType="DATE"    />
+ 		<result property="category" 	 						column="category" 	 				jdbcType="CHAR"    />
+ 		<result property="lessonTotalCount" 					column="total_lesson" 				jdbcType="INTEGER" />
+ 		<result property="hobbyClassPersonnel"  				column="total_student" 				jdbcType="INTEGER" />
+		<result property="hobbyClassState" 	 					column="class_state"  				jdbcType="CHAR"    />
+ 		<result property="totalMoney"  	 	 					column="total_money" 				jdbcType="INTEGER" />
+ 		<result property="steamCount" 	 	 					column="total_steam" 				jdbcType="INTEGER" />
+ 		<result property="totalGrade" 	 	 					column="total_grade"  				jdbcType="NUMERIC" /> 
+ 		<result property="steamCheck" 	 	 					column="steam_check"   		 		jdbcType="VARCHAR" />
+ 		<result property="event.eventNo"						column="event_no"   				jdbcType="INTEGER" />
+ 		<result property="event.eventTitle" 					column="event_title"    			jdbcType="VARCHAR" />
+ 		<result property="event.eventStartDate" 				column="event_start_date"  			jdbcType="DATE"    />
+ 		<result property="event.eventEndDate"   				column="event_end_date" 	 		jdbcType="DATE"    />
+ 		<result property="event.eventDiscount"  				column="event_discount" 			jdbcType="INTEGER" /> 
+ 		<result property="event.eventNoString"					column="event_no_string"   			jdbcType="VARCHAR" />
+ 		<result property="event.eventTitleString" 				column="event_title_string"    		jdbcType="VARCHAR" />
+		<result property="event.eventStartDateString" 			column="event_start_date_string"  	jdbcType="VARCHAR"    />
+ 		<result property="event.eventEndDateString"   			column="event_end_date_string" 	 	jdbcType="VARCHAR"    />
+ 		<result property="event.eventDiscountString"  			column="event_discount_string" 		jdbcType="VARCHAR" /> 
+ 		<result property="event.hobbyClass.hobbyClassPrice" 	column="event_class_price"  		jdbcType="INTEGER" />
+ 	</resultMap>
+	
+	<resultMap id="classAssessMap" type="classAssess">
+		<result property="assessNo" 	 	 				column="assess_no" 	 	jdbcType="INTEGER" />
+		<result property="hobbyClass.hobbyClassNo"			column="class_no" 	 	jdbcType="INTEGER" />
+		<result property="hobbyClass.hobbyClassName" 	 	column="class_title" 	jdbcType="VARCHAR" />
+		<result property="user.userId" 	 	 	 			column="user_id"  	 	jdbcType="VARCHAR" />
+		<result property="user.profileImage" 	 			column="profile_imgae"  jdbcType="VARCHAR" />
+		<result property="user.nickName" 	 	 			column="nickname" 	 	jdbcType="VARCHAR" />
+		<result property="assessStar" 	 	 				column="assess_star"    jdbcType="INTEGER" />
+		<result property="assessContent"  	 				column="assess_content" jdbcType="VARCHAR" />
+		<result property="regDate" 	 	 		 			column="reg_date"  	 	jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="lessonTimesMap" type="lessonTimes">
+		<result property="timeNo" 							column="time_no"		jdbcType="INTEGER" />
+		<result property="user.userId"						column="user_id"		jdbcType="VARCHAR" />
+		<result property="lesson.lessonNo"  				column="lesson_no"      jdbcType="INTEGER" />
+		<result property="lesson.hobbyClass.hobbyClassNo" 	column="class_no" 		jdbcType="INTEGER" />
+		<result property="lesson.hobbyClass.hobbyClassName" column="class_title" 	jdbcType="VARCHAR" />
+		<result property="lesson.lessonTitle"				column="lesson_title"	jdbcType="VARCHAR" />
+		<result property="lesson.lessonImage"				column="lesson_image"	jdbcType="VARCHAR" />
+		<result property="lesson.lessonIntro"			 	column="lesson_intro"	jdbcType="VARCHAR" />
+		<result property="lesson.lessonContent"				column="lesson_content" jdbcType="CLOB"		javaType="java.lang.String" />
+		<result property="lesson.lessonProject"		 		column="lesson_project" jdbcType="VARCHAR" />
+		<result property="lesson.lessonVideo"		 		column="lesson_video"	jdbcType="VARCHAR" />
+		<result property="lesson.totalCount"	 	 	 	column="total_count"	jdbcType="INTEGER" />
+		<result property="lesson.currentCount" 		 		column="row_seq" 	 	jdbcType="INTEGER" />
+		<result property="currentTimes"  					column="current_times"  jdbcType="INTEGER" />
+		<result property="totalTimes"  						column="total_times" 	jdbcType="INTEGER" />
+		<result property="maxTimes" 						column="max_times" 		jdbcType="INTEGER" />
+		<result property="hobbyClass.hobbyClassNo" 			column="class_no"		jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="userMap" type="user">
+		<result property="userId"		column="user_id"		jdbcType="VARCHAR" />
+		<result property="sex"	 	 	column="sex"	 	 	jdbcType="CHAR"    />
+		<result property="role"	 	 	column="role" 	 	 	jdbcType="CHAR"    />
+		<result property="phone"   		column="phone" 	 	 	jdbcType="VARCHAR" />
+		<result property="name" 	 	column="name" 	 	 	jdbcType="VARCHAR" />
+		<result property="profileImage" column="profile_image" 	jdbcType="VARCHAR" />
+		<result property="totalReport"  column="total_report"   jdbcType="INTEGER" />
+		<result property="birth" 	 	column="birth_date" 	jdbcType="VARCHAR" />
+		<result property="nickName" 	column="nickname"       jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="myHobbyClassPurchaseMap" type="purchase">
+		<result property="purchaseId" 				column="purchase_id" 		jdbcType="VARCHAR" />
+		<result property="user.userId"				column="user_id"			jdbcType="VARCHAR" />
+		<result property="user.birth"	 			column="birth_date"	 		jdbcType="VARCHAR" />
+		<result property="user.sex"					column="sex"				jdbcType="CHAR"    />
+		<result property="hobbyClass.hobbyClassNo"	column="class_no"			jdbcType="INTEGER" />
+		<result property="hobbyClass.startDate"		column="start_date"			jdbcType="DATE"    />
+		<result property="hobbyClass.endDate"		column="end_date"			jdbcType="DATE"    />
+		<result property="refundDate"		 		column="refund_date"		jdbcType="DATE"    />
+		<result property="purchaseDate"				column="purchase_date"		jdbcType="DATE"    />
+	</resultMap>
+	
+	<resultMap id="searchHobbyClassEventSelectMap" type="event">
+		<result property="eventNo" 				column="EVENT_NO"		jdbcType="INTEGER"/>
+		<result property="eventId" 				column="EVENT_ID" 		jdbcType="INTEGER"/>
+		<result property="eventTitle" 			column="EVENT_TITLE"		jdbcType="VARCHAR"/>
+		<result property="eventContent" 		column="EVENT_CONTENT"		jdbcType="CLOB"		javaType="java.lang.String"/>
+		<result property="eventStartDate"		column="START_DATE"		jdbcType="DATE"/>
+		<result property="eventEndDate" 		column="END_DATE"		jdbcType="DATE"/>
+		<!--   
+		<collection property="category" 		column="EVENT_CATEGORY"		javaType="java.util.ArrayList" ofType="java.lang.String" select="getCategoryListById"/>
+		--> 
+		<result property="category" 			column="EVENT_CATEGORY" jdbcType="VARCHAR" />
+		<result property="eventDiscount" 		column="EVENT_DISCOUNT"		jdbcType="INTEGER"/>
+		<result property="eventImage" 			column="EVENT_IMAGE"		jdbcType="INTEGER"/>
+		<result property="hobbyClass.hobbyClassNo" 	column="class_no"	jdbcType="INTEGER"/>
+		<result property="hobbyClass.category"	column="category"		jdbcType="VARCHAR"/>
+		<result property="user.userId" 			column="user_id"		jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap  id="searchHobbyClassCommunityReplySelectMap" type="reply">
+		<result property="replyNo"							column="community_no"		jdbcType="INTEGER"/>
+		<result property="user.userId" 						column="user_id"			jdbcType="VARCHAR"/>
+		<result property="user.profileImage" 				column="profile_image"  	jdbcType="VARCHAR"/>
+		<result property="user.name"						column="name" 				jdbcType="VARCHAR"/>
+		<result property="user.nickName"  					column="nickname"			jdbcType="VARCHAR"/>
+		<result property="article.hobbyClass.hobbyClassNo" 	column="class_no"			jdbcType="INTEGER"/>
+		<result property="replyContent" 					column="community_content"	jdbcType="CLOB"		javaType="java.lang.String"/>
+		<result property="regDate"							column="reg_date"			jdbcType="VARCHAR"/>
+		<result property="article.articleNo"				column="ref_no"				jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap  id="searchHobbyClassCommunityArticleSelectMap" type="article">
+		<result property="articleNo"					column="community_no"		jdbcType="INTEGER"/>
+		<result property="hobbyClass.hobbyClassNo" 		column="class_no"			jdbcType="INTEGER"/>
+		<result property="articleContent" 				column="community_content"	jdbcType="CLOB"		javaType="java.lang.String"/>
+		<result property="regDate"						column="reg_date"			jdbcType="VARCHAR"/>
+		<result property="user.userId" 					column="user_id"			jdbcType="VARCHAR"/>
+		<result property="user.profileImage" 			column="profile_image"  	jdbcType="VARCHAR"/>
+		<result property="user.name"					column="name" 				jdbcType="VARCHAR"/>
+		<result property="user.nickName"  				column="nickname"			jdbcType="VARCHAR"/>
+	</resultMap>
+	
+ 	<select id="getSearchHobbyClass" parameterType="java.util.Map" resultMap="hobbyClassMap">
+ 		SELECT  
+ 		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, hc.kit_image, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		UPPER(hc.category) category, hc.kit_name, hc.kit_price, hc.kit_intro, u.nickname, u.profile_image, u.role, NVL2(s.steam_no, '1', '0') steam_check, NVL(grade.assess_star, 0) total_grade, 
+ 		e.event_no_string, e.event_discount_string, e.event_category, e.event_title_string, e.event_start_date_string event_start_date_string, e.event_end_date_string event_end_date_string       
+ 		FROM hobbyclass hc, users u, ( SELECT
+ 						  	     	   steam_no, class_no 
+ 						  	     	   FROM steam 
+ 						  	     	   WHERE user_id = #{userId:VARCHAR} AND class_no = #{hobbyClassNo} 	
+ 						  	      	  ) s , ( SELECT 
+ 						  	      		      AVG(assess_star) AS assess_star 
+ 						  	      		      FROM class_assess 
+ 						  	      		      WHERE class_no = #{hobbyClassNo} 
+ 						  	      		    ) grade , ( SELECT 
+															event_category, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_no) ORDER BY event_no).EXTRACT('//text()'), 2) event_no_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_title) ORDER BY event_no).EXTRACT('//text()'), 2) event_title_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_discount) ORDER BY event_no).EXTRACT('//text()'), 2) event_discount_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(start_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_start_date_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(end_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_end_date_string
+															FROM event
+															WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+															GROUP BY event_category 
+ 						  	      		    			  ) e 
+ 		WHERE hc.class_no = #{hobbyClassNo} 
+ 		      AND hc.user_id = u.user_id 
+ 		      AND hc.class_no = s.class_no(+) 
+ 		      AND hc.category = e.event_category(+)  
+ 	</select>
+ 	
+ 	<select id="getHobbyClassHashtag" parameterType="java.lang.Integer" resultType="java.lang.String">
+ 		SELECT 
+ 		hashtag_code 
+ 		FROM hashtag 
+ 		WHERE class_no = #{hobbyClassNo} 
+ 	</select>
+	
+	<sql id="hobbyClassList">
+		SELECT 
+ 		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role, NVL2(s.steam_no, '1', '0') steam_check, NVL(grade.assess_star, 0) total_grade, 
+ 		e.event_no_string, e.event_discount_string, e.event_category, e.event_title_string, e.event_start_date_string event_start_date_string, e.event_end_date_string event_end_date_string       
+ 		FROM hobbyclass hc, users u, ( SELECT 
+ 									   steam_no, class_no 
+ 									   FROM steam 
+ 									   WHERE user_id = #{userId:VARCHAR}    
+ 									 ) s, 
+ 									   <if test="search.hashtag != null" >
+ 									 	  ( SELECT  
+ 									        inner_table.class_no class_no 
+ 									        FROM ( SELECT 
+ 									        	   class_no, hashtag_code 
+ 									        	   FROM hashtag 
+ 									        	   WHERE class_no IS NOT NULL 
+ 									        	 ) inner_table 	 
+ 									        <where>
+		 									    <foreach collection="search.hashtag" item="index" open="(" close=")" separator="or"> 
+		 									        hashtag_code = #{index}  
+		 									     </foreach>  
+		 									</where> 
+		 									 GROUP BY class_no 
+ 									 	  ) h ,
+ 									   </if>  	   
+ 									 	  	    ( SELECT 
+ 						  	      		      	  class_no, AVG(assess_star) AS assess_star 
+ 						  	      		      	  FROM class_assess 
+ 						  	      		      	  GROUP BY class_no 
+ 						  	      		    	) grade , ( SELECT 
+															event_category, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_no) ORDER BY event_no).EXTRACT('//text()'), 2) event_no_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_title) ORDER BY event_no).EXTRACT('//text()'), 2) event_title_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_discount) ORDER BY event_no).EXTRACT('//text()'), 2) event_discount_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(start_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_start_date_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(end_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_end_date_string
+															FROM event
+															WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+															GROUP BY event_category 
+ 						  	      		    			  ) e 
+ 		WHERE hc.class_no = s.class_no(+)  
+ 		      AND hc.user_id = u.user_id 
+ 		      AND hc.category = e.event_category(+)  
+ 		      <if test="search.hashtag != null">
+ 		      	AND hc.class_no = h.class_no 
+ 		      </if>
+ 		      AND hc.class_no = grade.class_no(+) 
+ 		      <if test="search.searchCondition == 1">
+ 		      		AND hc.class_title LIKE ('%' || #{search.searchKeyword} || '%')  
+ 		      </if>
+ 		      <if test="search.searchCondition == 2">
+ 		      		AND u.nickname LIKE ('%' || #{search.searchKeyword} || '%')  
+ 		      </if>
+ 		      <if test="classState != 0">
+ 		      	    AND hc.class_state = #{classState}  
+ 		      </if> 
+ 		      <if test="search.category != 'all'">
+ 		      	    AND hc.category = #{search.category}   
+ 		      </if> 
+ 		      AND hc.class_state != '0' 
+ 		      AND hc.class_state != '1' 
+ 		      AND hc.class_state != '2' 
+ 		      AND hc.class_state != '4' 
+ 		      AND hc.class_state != '7' 
+ 		ORDER BY hc.class_no ASC 
+	</sql>
+	
+	<select id="getSearchHobbyClassList" parameterType="java.util.Map" resultMap="hobbyClassMap">
+		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="hobbyClassList" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+	</select>
+	
+	<select id="getSearchHobbyClassListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="hobbyClassList" />
+				 	) countTable
+	</select>
+	
+	<sql id="assessList">
+		SELECT 
+		ca.assess_no, u.user_id, u.profile_image, u.nickname, hc.class_no, hc.class_title, ca.assess_content, TO_CHAR(ca.reg_date, 'YYYY-MM-DD') reg_date, ca.assess_star 
+		FROM users u, class_assess ca, hobbyclass hc 
+		WHERE ca.user_id = u.user_id 
+		      AND ca.class_no = hc.class_no 
+		      AND ca.class_no = #{hobbyClassNo} 
+        ORDER BY ca.assess_no DESC  
+	</sql>
+	
+	<select id="getHobbyClassAssessContent" parameterType="java.util.Map" resultMap="classAssessMap">
+		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="assessList" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+	</select>
+	
+	<select id="getHobbyClassAssessContentTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="assessList" />
+				 	) countTable
+	</select>
+
+	<select id="getHobbyClassLessonContent" parameterType="java.lang.Integer" resultMap="lessonTimesMap" >
+		SELECT  
+		* 
+		FROM ( 
+		        SELECT 
+		        ROWNUM row_seq, inner_table.* 
+		        FROM ( 
+		                SELECT 
+		                l.lesson_no, l.class_no, l.lesson_video, l.lesson_content, l.lesson_project, l.lesson_image, l.lesson_intro, l.lesson_title, 
+		                sum.total_count, lt.time_no, lt.user_id, lt.current_times, lt.total_times, lt.max_times 
+		                FROM lesson l, (
+		                                    SELECT 
+		                                    class_no, COUNT(lesson_no) total_count 
+		                                    FROM lesson
+		                                    GROUP BY class_no 
+		                               ) sum, (
+		                                         SELECT 
+		                                         lesson_no, time_no, user_id, current_times, total_times, max_times 
+		                                         FROM lesson_times 
+		                                         WHERE user_id = #{userId} 
+		                                      ) lt 
+		                WHERE l.class_no = sum.class_no 
+		                      AND l.lesson_no = lt.lesson_no(+) 
+		                      AND l.class_no = #{hobbyClassNo} 
+		                ORDER BY l.class_no ASC, l.lesson_no ASC                   
+		             ) inner_table 
+		     ) 	
+	</select>
+	
+	<sql id="popularHobbyClassList">
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role, NVL2(s.steam_no, '1', '0') steam_check, NVL(grade.assess_star, 0) total_grade, 
+ 		e.event_no_string, e.event_discount_string, e.event_category, e.event_title_string, e.event_start_date_string event_start_date_string, e.event_end_date_string event_end_date_string       
+ 		FROM hobbyclass hc, users u, ( SELECT
+ 						  	     	   steam_no, class_no 
+ 						  	     	   FROM steam 
+ 						  	     	   WHERE user_id = #{userId:VARCHAR} 
+ 						  	      	  ) s , ( SELECT 
+ 						  	      		      class_no, AVG(assess_star) AS assess_star 
+ 						  	      		      FROM class_assess 
+ 						  	      		      GROUP BY class_no 
+ 						  	      		    ) grade , ( SELECT 
+															event_category, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_no) ORDER BY event_no).EXTRACT('//text()'), 2) event_no_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_title) ORDER BY event_no).EXTRACT('//text()'), 2) event_title_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_discount) ORDER BY event_no).EXTRACT('//text()'), 2) event_discount_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(start_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_start_date_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(end_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_end_date_string
+															FROM event
+															WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+															GROUP BY event_category 
+ 						  	      		    			  ) e 
+ 		WHERE hc.user_id = u.user_id 
+ 		      AND hc.class_no = s.class_no(+) 
+ 		      AND hc.category = e.event_category(+)   
+ 		      AND hc.total_steam <![CDATA[>=]]> 200 
+ 		      AND hc.class_no = grade.class_no(+)  
+ 		      AND hc.class_state = '3' 
+	</sql>
+	
+	<select id="getpopularHobbyClassList" parameterType="java.util.Map" resultMap="hobbyClassMap">
+		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="popularHobbyClassList" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+	</select>
+	
+	<select id="getPopularHobbyClassListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="popularHobbyClassList" />
+				 	) countTable
+	</select>
+	
+	<sql id="registerHobbyClassList">
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role, NVL2(s.steam_no, '1', '0') steam_check, NVL(grade.assess_star, 0) total_grade, 
+ 		e.event_no_string, e.event_discount_string, e.event_category, e.event_title_string, e.event_start_date_string event_start_date_string, e.event_end_date_string event_end_date_string       
+ 		FROM hobbyclass hc, users u, ( SELECT
+ 						  	     	   steam_no, class_no 
+ 						  	     	   FROM steam 
+ 						  	     	   WHERE user_id = #{userId:VARCHAR} 
+ 						  	      	  ) s , ( SELECT 
+ 						  	      		      class_no, AVG(assess_star) AS assess_star 
+ 						  	      		      FROM class_assess 
+ 						  	      		      GROUP BY class_no 
+ 						  	      		    ) grade , ( SELECT 
+															event_category, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_no) ORDER BY event_no).EXTRACT('//text()'), 2) event_no_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_title) ORDER BY event_no).EXTRACT('//text()'), 2) event_title_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_discount) ORDER BY event_no).EXTRACT('//text()'), 2) event_discount_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(start_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_start_date_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(end_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_end_date_string
+															FROM event
+															WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+															GROUP BY event_category 
+ 						  	      		    			  ) e 
+ 		WHERE hc.user_id = u.user_id 
+ 		      AND hc.class_no = s.class_no(+) 
+ 		      AND hc.class_no = grade.class_no(+)  
+ 		      AND hc.category = e.event_category(+)   
+ 		      AND hc.class_state = '3' 
+ 		      AND hc.total_steam <![CDATA[<]]> 200 
+ 		ORDER BY start_date DESC, hc.class_no DESC  
+	</sql>
+	
+	<select id="getRegisterHobbyClassList" parameterType="java.util.Map" resultMap="hobbyClassMap">
+		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="registerHobbyClassList" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+	</select>
+	
+	<select id="getRegisterHobbyClassListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="registerHobbyClassList" />
+				 	) countTable
+	</select>
+	
+	<insert id="addClassAssess" parameterType="classAssess"> 
+		INSERT 
+		INTO class_assess( assess_no, class_no, user_id, assess_content, reg_date, assess_star ) 
+		VALUES( seq_class_class_assess_no.nextval, #{hobbyClass.hobbyClassNo}, #{user.userId}, #{assessContent}, SYSDATE, #{assessStar} ) 
+	</insert>
+	
+	<select id="getUserSelectHashtag" parameterType="java.lang.String" resultType="java.lang.String" >
+		SELECT  
+		hashtag_code 
+		FROM hashtag 
+		WHERE user_id = #{userId} 
+	</select>
+	
+	<sql id="steamHobbyClassList">
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role, NVL2(s.steam_no, '1', '0') steam_check, NVL(grade.assess_star, 0) total_grade, 
+ 		e.event_no_string, e.event_discount_string, e.event_category, e.event_title_string, e.event_start_date_string event_start_date_string, e.event_end_date_string event_end_date_string       
+ 		FROM hobbyclass hc, users u, ( SELECT
+ 						  	     	   steam_no, class_no 
+ 						  	     	   FROM steam 
+ 						  	     	   WHERE user_id = #{userId}  
+ 						  	      	  ) s , ( SELECT 
+ 						  	      		      class_no, AVG(assess_star) AS assess_star 
+ 						  	      		      FROM class_assess 
+ 						  	      		      GROUP BY class_no 
+ 						  	      		    ) grade , ( SELECT 
+															event_category, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_no) ORDER BY event_no).EXTRACT('//text()'), 2) event_no_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_title) ORDER BY event_no).EXTRACT('//text()'), 2) event_title_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_discount) ORDER BY event_no).EXTRACT('//text()'), 2) event_discount_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(start_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_start_date_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(end_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_end_date_string
+															FROM event
+															WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+															GROUP BY event_category 
+ 						  	      		    			  ) e 
+ 		WHERE hc.user_id = u.user_id 
+ 		      AND hc.class_no = s.class_no 
+ 		      AND hc.class_no = grade.class_no(+)  
+ 		      AND hc.class_state = '3' 
+ 		      AND hc.category = e.event_category(+)  
+ 		ORDER BY hc.class_no ASC, start_date DESC 
+	</sql>
+	
+	<select id="getSteamHobbyClassList" parameterType="java.util.Map" resultMap="hobbyClassMap">
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role, NVL2(s.steam_no, '1', '0') steam_check, NVL(grade.assess_star, 0) total_grade, 
+ 		e.event_no_string, e.event_discount_string, e.event_category, e.event_title_string, e.event_start_date_string event_start_date_string, e.event_end_date_string event_end_date_string       
+ 		FROM hobbyclass hc, users u, ( SELECT
+ 						  	     	   steam_no, class_no 
+ 						  	     	   FROM steam 
+ 						  	     	   WHERE user_id = #{userId}  
+ 						  	      	  ) s , ( SELECT 
+ 						  	      		      class_no, AVG(assess_star) AS assess_star 
+ 						  	      		      FROM class_assess 
+ 						  	      		      GROUP BY class_no 
+ 						  	      		    ) grade , ( SELECT 
+															event_category, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_no) ORDER BY event_no).EXTRACT('//text()'), 2) event_no_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_title) ORDER BY event_no).EXTRACT('//text()'), 2) event_title_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_discount) ORDER BY event_no).EXTRACT('//text()'), 2) event_discount_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(start_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_start_date_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(end_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_end_date_string
+															FROM event
+															WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+															GROUP BY event_category 
+ 						  	      		    			  ) e 
+ 		WHERE hc.user_id = u.user_id 
+ 		      AND hc.class_no = s.class_no 
+ 		      AND hc.class_no = grade.class_no(+)  
+ 		      AND hc.class_state = '3' 
+ 		      AND hc.category = e.event_category(+)  
+ 		ORDER BY hc.class_no ASC, start_date DESC 
+	</select>
+	
+	<!--  
+	<select id="getSteamHobbyClassList" parameterType="java.util.Map" resultMap="hobbyClassMap">
+		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="steamHobbyClassList" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+	</select>
+	-->
+	
+	<select id="getSteamHobbyClassListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="steamHobbyClassList" />
+				 	) countTable
+	</select>
+
+	
+	<select id="getPurchaseHobbyClassSchedule" parameterType="java.lang.String" resultMap="hobbyClassMap" >
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price 
+ 		FROM hobbyclass hc, purchase p   
+ 		WHERE hc.class_no = p.class_no  
+ 		      AND p.user_id = #{userId}  
+ 		      AND hc.class_state != '6' 
+ 		      AND hc.class_state != '7' 
+	</select>
+	<!--  
+	<select id="getHobbyClassBuyerStats" parameterType="java.lang.String" resultMap="userMap">
+		SELECT 
+		u.user_id, u.name, u.nickname, u.birth_date, u.sex 
+		FROM users u, purchase p 
+		WHERE u.user_id = p.user_id 
+			  AND p.class_no = #{hobbyClassNo} 
+	</select>
+	-->
+	
+	<select id="getHobbyClassBuyerStats" parameterType="java.lang.String" resultMap="myHobbyClassPurchaseMap">
+		SELECT 
+		p.purchase_id, u.user_id, u.birth_date, u.sex, p.class_no, p.refund_date, p.purchase_date, h.start_date, h.end_date  
+		FROM purchase p, users u, hobbyclass h  
+		WHERE p.user_id = u.user_id
+		      AND p.class_no = h.class_no  
+			  AND p.class_no = #{hobbyClassNo}  
+	</select>
+	
+	<insert id="addSteamHobbyClass" parameterType="java.util.Map">
+		INSERT 
+		INTO steam( steam_no, class_no, user_id ) 
+		VALUES( seq_steam_steam_no.nextval, #{hobbyClassNo}, #{userId} )
+	</insert>
+	
+	<update id="updateHobbyClassSteam" parameterType="java.util.Map">
+		UPDATE 
+		hobbyclass
+		SET total_steam = #{steamCount}   
+		WHERE class_no = #{hobbyClassNo} 
+	</update>
+	
+	<delete id="deleteSteamHobbyClass" parameterType="java.util.Map">
+		DELETE 
+		FROM steam 
+		WHERE user_id = #{userId} 
+		      AND class_no = #{hobbyClassNo} 
+	</delete>
+	
+	<sql id="recommendHobbyClassList">
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role, NVL2(s.steam_no, '1', '0') steam_check, NVL(grade.assess_star, 0) total_grade, 
+		e.event_no_string, e.event_discount_string, e.event_category, e.event_title_string, e.event_start_date_string event_start_date_string, e.event_end_date_string event_end_date_string       
+		FROM hobbyclass hc, users u, ( SELECT 
+									   steam_no, class_no 
+									   FROM steam 
+									   WHERE user_id = #{userId:VARCHAR} 
+									 ) s, 
+									 	  ( SELECT  
+									        inner_table.class_no class_no 
+									        FROM ( SELECT 
+									        	   h.class_no, h.hashtag_code 
+									        	   FROM hashtag h, ( SELECT
+									        	     				 hashtag_code 
+									        	     				 FROM hashtag 
+									        	     				 WHERE user_id = #{userId:VARCHAR} 
+									        	   				   ) inner_hashtag 
+									        	   WHERE class_no IS NOT NULL 
+									        	         AND h.hashtag_code = inner_hashtag.hashtag_code 
+									        	 ) inner_table 	 
+		 									GROUP BY class_no 
+									 	  ) h ,	   
+									 	  	    ( SELECT 
+						  	      		      	  class_no, AVG(assess_star) AS assess_star 
+						  	      		      	  FROM class_assess 
+						  	      		      	  GROUP BY class_no 
+						  	      		    	) grade , ( SELECT 
+															event_category, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_no) ORDER BY event_no).EXTRACT('//text()'), 2) event_no_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_title) ORDER BY event_no).EXTRACT('//text()'), 2) event_title_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', event_discount) ORDER BY event_no).EXTRACT('//text()'), 2) event_discount_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(start_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_start_date_string, 
+															SUBSTR(XMLAGG(XMLELEMENT(x, '/', TO_CHAR(end_date, 'YYYY-MM-DD')) ORDER BY event_no).EXTRACT('//text()'), 2) event_end_date_string
+															FROM event
+															WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+															GROUP BY event_category 
+ 						  	      		    			  ) e 
+		WHERE hc.class_no = s.class_no(+)  
+		      AND hc.user_id = u.user_id 
+		      AND hc.class_no = h.class_no 
+		      AND hc.class_no = grade.class_no(+) 
+		      AND hc.category = e.event_category(+) 
+		      AND hc.class_state = '3'    
+		ORDER BY hc.class_no ASC 
+	</sql>
+	
+	<select id="getRecommendHobbyClassList" parameterType="java.util.Map" resultMap="hobbyClassMap">
+		SELECT 
+ 		* 
+ 		FROM ( SELECT 
+ 		       inner_table.*, ROWNUM AS row_seq 
+ 		       FROM ( <include refid="recommendHobbyClassList" /> 
+ 		            ) inner_table 
+ 		       <where>
+ 		           ROWNUM <![CDATA[<=]]> #{search.currentPage} * #{search.pageSize} 
+ 		       </where>
+ 			  )
+ 	    <where>
+ 	     	row_seq BETWEEN ( #{search.currentPage} - 1 ) * #{search.pageSize}  + 1 AND #{search.currentPage} * #{search.pageSize} 
+ 	    </where>
+	</select>
+	
+	<select id="getRecommendHobbyClassListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="recommendHobbyClassList" />
+				 	) countTable
+	</select>
+	
+	<select id="getHobbyClassAssessSeqNo" resultType="java.lang.Integer">
+		SELECT 
+		seq_class_class_assess_no.currval 
+		FROM DUAL 
+	</select>
+	
+	<select id="getClassAssess" parameterType="java.lang.Integer" resultMap="classAssessMap">
+		SELECT 
+		* 
+		FROM class_assess 
+		WHERE assess_no = #{assessNo}  
+	</select>
+	
+	<select id="getPurchaseClassCheck" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		COUNT(*) 
+		FROM purchase
+		WHERE class_no = #{hobbyClassNo} AND user_id = #{userId} 
+	</select>
+	
+	<!-- 
+	<insert id="addDummyData" parameterType="hobbyClass">
+		INSERT 
+		INTO hobbyclass ( class_no, user_id, class_title, class_image, class_state, class_price, class_intro, category, start_date, end_date, total_student, total_steam, kit_name, kit_price, kit_image, kit_intro, total_lesson )
+		VALUES ( seq_hobbyclass_class_no.nextval, #{user.userId}, #{hobbyClassName}, #{hobbyClassImage}, #{hobbyClassState}, #{hobbyClassPrice}, #{hobbyClassIntro},  
+				#{category}, #{startDate}, #{endDate}, #{hobbyClassPersonnel}, #{steamCount}, #{kitName}, #{kitPrice}, #{kitImage}, #{kitIntro}, #{lessonTotalCount} )		
+				
+	</insert>
+	-->
+	
+	<update id="addDummyData" parameterType="hobbyClass">
+		UPDATE 
+		hobbyclass
+		SET class_intro = #{hobbyClassIntro} 
+		WHERE class_no = #{hobbyClassNo} 
+				
+	</update>
+	
+	<update id="updateLessonDummyData" parameterType="lesson">
+		UPDATE 
+		lesson 
+		SET lesson_content = #{lessonContent} 
+		WHERE lesson_no = #{lessonNo} 
+	</update>
+	
+	<insert id="addDummyDataHashtag" parameterType="string">
+		INSERT 
+		INTO hashtag ( hashtag_no, class_no, hashtag_code ) 
+		VALUES ( seq_hashtag_hashtag_no.nextval, seq_hobbyclass_class_no.currval, #{hashtagCode} ) 
+	</insert>
+	
+	<select id="getUserClassAssess" parameterType="java.util.Map" resultMap="classAssessMap">
+		SELECT 
+		* 
+		FROM class_assess 
+		WHERE user_id = #{userId:VARCHAR}  
+		      AND class_no = #{hobbyClassNo}  
+	</select>
+	
+	<!-- 
+	<select id="getNowEventList" resultMap="searchHobbyClassEventSelectMap">
+		SELECT 
+		event_id, event_title, event_discount, start_date, end_date, event_image  
+		FROM event 
+		WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+		GROUP BY event_id, event_title, event_discount, start_date, end_date, event_image  
+	</select>
+	 -->
+	 
+	<!-- 하경씨 파트 -->
+	 
+	<select id="getNowEventList" resultMap="searchHobbyClassEventSelectMap">
+		SELECT 
+		event_id, event_title, event_discount, start_date, end_date, event_image, SUBSTR(XMLAGG(XMLELEMENT(x, ',', event_category) ORDER BY event_category).EXTRACT('//text()').GETSTRINGVAL(), 2) category 
+		FROM event 
+		WHERE TO_CHAR(start_date, 'YYYY-MM-DD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') <![CDATA[<]]> TO_CHAR(end_date, 'YYYY-MM-DD')
+		GROUP BY event_id, event_title, event_discount, start_date, end_date, event_image  
+	</select>
+	
+	<select id="getClassCommunityArticleContent" parameterType="string" resultMap="searchHobbyClassCommunityArticleSelectMap">
+		SELECT 
+		* 
+		FROM community c 
+		WHERE community_no = #{communityNo} 
+	</select>
+	
+	<select id="getClassCommunityReplyContent" parameterType="string" resultMap="searchHobbyClassCommunityReplySelectMap">
+		SELECT 
+		* 
+		FROM community
+		WHERE community_type = '1' 
+			  AND ref_no = #{communityNo} 
+		ORDER BY community_no DESC 
+	</select>
+	
+	<!-- 하경씨 파트 -->
+	
+	<sql id="listenHobbyClassList">
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role 
+ 		FROM hobbyclass hc, users u, purchase p  
+ 		WHERE hc.user_id = u.user_id 
+ 		      AND hc.class_state = '5' 
+ 		      AND hc.class_no = p.class_no 
+ 		      AND p.user_id = #{userId} 
+	</sql>
+	
+	<select id="getListenHobbyClassList" parameterType="java.util.Map" resultMap="hobbyClassMap">
+		SELECT 
+		hc.class_no, hc.user_id, hc.class_title, hc.class_image, hc.class_state, hc.class_intro, hc.class_price, hc.total_money, 
+ 		hc.total_lesson, hc.total_student, hc.total_steam, TO_DATE(TO_CHAR(hc.start_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') start_date, TO_DATE(TO_CHAR(hc.end_date, 'YYYY-MM-DD'), 'YYYY-MM-DD') end_date, 
+ 		hc.category, hc.kit_name, hc.kit_price, u.nickname, u.profile_image, u.role 
+ 		FROM hobbyclass hc, users u, purchase p  
+ 		WHERE hc.user_id = u.user_id 
+ 		      AND hc.class_state = '5' 
+ 		      AND hc.class_no = p.class_no 
+ 		      AND p.user_id = #{userId} 
+	</select>
+	
+	<select id="getListenHobbyClassListTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		 SELECT COUNT ( * ) FROM 	
+			(   
+				<include refid="listenHobbyClassList" />
+				 	) countTable
+	</select>
+	
+	<select id="getHobbyClassStateStartDate" parameterType="java.lang.String" resultMap="hobbyClassMap">
+		SELECT 
+		start_date 
+		FROM class_date 
+		WHERE class_no = #{hobbyClassNo} 
+	</select>
+	
+	<!-- 인코딩용으로 새로 추가 -->
+	<select id="getHobbyClassEncodingLessonList" parameterType="java.lang.Integer" resultMap="lessonTimesMap">
+		SELECT 
+		lesson_no, lesson_video 
+		FROM lesson 
+		WHERE class_no = #{hobbyClassNo}  
+	</select>
+</mapper>

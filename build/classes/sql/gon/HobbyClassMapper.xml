@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- //2020-02-24 Git Commit -->
+<mapper namespace="HobbyClassMapper">
+ 	
+ 	
+	<resultMap id="hobbyclassSelectMap" type="hobbyclass">
+		<result property="hobbyClassNo" 		column="CLASS_NO" 		jdbcType="NUMERIC" />
+		<result property="user.userId" 			column="USER_ID" 		jdbcType="VARCHAR" />
+		<result property="user.nickName" 		column="NICKNAME" 		jdbcType="VARCHAR" />
+		<result property="hobbyClassName" 		column="CLASS_TITLE" 	jdbcType="VARCHAR" />
+		<result property="hobbyClassImage" 		column="CLASS_IMAGE" 	jdbcType="VARCHAR" />
+		<result property="hobbyClassIntro" 		column="CLASS_INTRO" 	jdbcType="CLOB" />
+		<result property="hobbyClassPrice" 		column="CLASS_PRICE" 	jdbcType="NUMERIC" />
+		<result property="kitName" 				column="KIT_NAME" 		jdbcType="VARCHAR" />
+		<result property="kitImage" 			column="KIT_IMAGE" 		jdbcType="VARCHAR" />
+		<result property="kitPrice" 			column="KIT_PRICE" 		jdbcType="NUMERIC" />
+		<result property="kitIntro" 		    column="KIT_INTRO" 		jdbcType="VARCHAR" />
+		<result property="startDate" 			column="START_DATE" 	jdbcType="DATE" />
+		<result property="endDate" 				column="END_DATE" 		jdbcType="DATE" />
+		<result property="category" 			column="CATEGORY" 		jdbcType="CHAR" />
+		<result property="hashtag" 				column="HASHTAG_CODE" 	jdbcType="CHAR" />
+		<result property="lessonTotalCount" 	column="TOTAL_LESSON" 	jdbcType="NUMERIC" />
+		<result property="hobbyClassPersonnel" 	column="TOTAL_STUDENT" 	jdbcType="NUMERIC" />
+		<result property="hobbyClassState" 		column="CLASS_STATE" 	jdbcType="CHAR" />
+		<result property="totalMoney" 			column="TOTAL_MONEY" 	jdbcType="NUMERIC" />
+		<result property="steamCount" 			column="TOTAL_STEAM" 	jdbcType="NUMERIC" />
+		<result property="totalGrade" 			column="TOTAL_GRADE" 	jdbcType="NUMERIC" />
+	</resultMap>
+	
+	<resultMap id="lessonSelectMap" type="lesson">
+		<result property="lessonNo" 				column="LESSON_NO" 		jdbcType="NUMERIC" />
+		<result property="hobbyClass.hobbyClassNo" 	column="CLASS_NO" 		jdbcType="NUMERIC" />
+		<result property="lessonTitle" 				column="LESSON_TITLE" 	jdbcType="VARCHAR" />
+		<result property="lessonImage" 				column="LESSON_IMAGE" 	jdbcType="VARCHAR" />
+		<result property="lessonIntro" 				column="LESSON_INTRO" 	jdbcType="VARCHAR" />
+		<result property="lessonContent" 			column="LESSON_CONTENT" jdbcType="CLOB" />
+		<result property="lessonProject" 			column="LESSON_PROJECT" jdbcType="VARCHAR" />
+		<result property="lessonVideo" 				column="LESSON_VIDEO"	jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getHobbyClassList" parameterType="search" resultMap="hobbyclassSelectMap">
+		SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  					FROM		(	SELECT CLASS_NO, CLASS_TITLE, CLASS_IMAGE, CLASS_STATE
+										FROM HOBBYCLASS
+										WHERE USER_ID = #{searchKeyword}
+										ORDER BY CLASS_NO DESC	) inner_table
+						WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	</select>
+	
+	<select id="getHobbyClassTotalCount" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM HOBBYCLASS
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<insert id="addHobbyClass" parameterType="string">
+		INSERT INTO HOBBYCLASS ( CLASS_NO, USER_ID, CLASS_STATE, START_DATE )
+		VALUES ( seq_hobbyclass_class_no.nextval, #{userId}, 0, SYSDATE )
+	</insert>
+	
+	<select id="getHobbyClassNo" parameterType="string" resultMap="hobbyclassSelectMap">
+		SELECT first.CLASS_NO CLASS_NO
+		FROM (	SELECT CLASS_NO, ROWNUM
+				FROM HOBBYCLASS
+				WHERE USER_ID = #{userId}
+				AND ROWNUM = 1
+				ORDER BY CLASS_NO DESC
+								) first
+	</select>
+	
+	<select id="getNewHobbyClass" parameterType="string" resultMap="hobbyclassSelectMap">
+		SELECT ROWNUM, data.*
+		FROM (	SELECT CLASS_NO, USER_ID, CLASS_TITLE, CLASS_IMAGE, CLASS_STATE, CLASS_INTRO, CLASS_PRICE, CATEGORY, KIT_NAME, KIT_PRICE, KIT_IMAGE, KIT_INTRO, ROWNUM
+				FROM HOBBYCLASS
+				WHERE USER_ID = #{userId}
+				ORDER BY CLASS_NO DESC	) data
+		WHERE ROWNUM = 1
+
+	</select>
+	
+	<delete id="deleteHobbyClass" parameterType="int">
+		DELETE HOBBYCLASS
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</delete>
+	
+	<select id="getSaveHobbyClass" parameterType="int" resultMap="hobbyclassSelectMap">
+		SELECT CLASS_NO, USER_ID, CLASS_TITLE, CLASS_IMAGE, CLASS_STATE, CLASS_INTRO, CLASS_PRICE, CATEGORY, KIT_NAME, KIT_PRICE, KIT_IMAGE, KIT_INTRO
+		FROM HOBBYCLASS
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</select>
+	
+	<select id="getHobbyClass" parameterType="map" resultMap="hobbyclassSelectMap">
+		SELECT CLASS_NO  
+		<if test="what == '510'">
+			, CLASS_TITLE, CLASS_IMAGE, CLASS_INTRO, CLASS_PRICE, CATEGORY
+		</if>
+		<if test="what == '520'">
+			, TOTAL_LESSON
+		</if>
+		<if test="what == '530'">
+			, KIT_NAME, KIT_PRICE, KIT_IMAGE, KIT_INTRO
+		</if>
+		FROM HOBBYCLASS
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</select>
+	
+	<update id="saveHobbyClassInfo" parameterType="hobbyclass">
+		UPDATE HOBBYCLASS
+		<set>
+			CLASS_TITLE = #{hobbyClassName:VARCHAR},
+			CATEGORY = #{category:CHAR},
+			CLASS_PRICE = #{hobbyClassPrice:NUMERIC},
+			CLASS_IMAGE = #{hobbyClassImage:VARCHAR},
+			CLASS_INTRO	 = #{hobbyClassIntro:CLOB},
+			START_DATE = SYSDATE
+		</set>
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</update>
+	
+	<update id="saveKit" parameterType="hobbyclass">
+		UPDATE HOBBYCLASS
+		<set>
+			KIT_NAME = #{kitName:VARCHAR},
+			KIT_PRICE = #{kitPrice:NUMERIC},
+			KIT_IMAGE = #{kitImage:VARCHAR},
+			KIT_INTRO = #{kitIntro:VARCHAR},
+			START_DATE = SYSDATE
+		</set>
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</update>
+		 
+	<update id="saveCheckHobbyClass" parameterType="int">
+		UPDATE HOBBYCLASS
+		<set>
+			CLASS_STATE = 1,
+			START_DATE = SYSDATE
+		</set>
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</update>
+	
+	<select id="getPreview" parameterType="map" resultMap="hobbyclassSelectMap">
+		SELECT h.CLASS_NO,
+		<if test="what == '510'">
+			h.CLASS_TITLE, h.CLASS_IMAGE, h.CLASS_INTRO, h.CLASS_PRICE, h.CATEGORY, h.USER_ID, h.TOTAL_STUDENT, h.TOTAL_LESSON, u.NICKNAME
+		</if>
+		<if test="what == '520'">
+			h.TOTAL_LESSON
+		</if>
+		<if test="what == '530'">
+			h.KIT_NAME, h.KIT_PRICE, h.KIT_IMAGE, h.KIT_INTRO
+		</if>
+		FROM HOBBYCLASS h
+		<if test="what == '510'">
+			, USERS u
+		</if>
+		WHERE h.CLASS_NO = #{hobbyClassNo}
+		<if test="what == '510'">
+			AND h.USER_ID = u.USER_ID
+		</if>
+	</select>
+	
+	<select id="getNickName" parameterType="string" resultType="string">
+		SELECT NICKNAME
+		FROM USERS
+		WHERE USER_ID = #{userIdValue}
+	</select>
+	
+	<update id="saveLesson" parameterType="lesson">
+		UPDATE LESSON
+		<set>
+			LESSON_TITLE = #{lessonTitle:VARCHAR},
+			LESSON_IMAGE = #{lessonImage:VARCHAR},
+			LESSON_INTRO = #{lessonIntro:VARCHAR},
+			LESSON_CONTENT = #{lessonContent:CLOB},
+			LESSON_PROJECT = #{lessonProject:VARCHAR},
+			LESSON_VIDEO = #{lessonVideo:VARCHAR}
+		</set>
+		WHERE LESSON_NO = #{lessonNo}
+	</update>
+
+	<select id="getLesson" parameterType="int" resultMap="lessonSelectMap">
+		SELECT LESSON_NO, CLASS_NO, LESSON_TITLE, LESSON_IMAGE, LESSON_INTRO, LESSON_CONTENT, LESSON_PROJECT, LESSON_VIDEO
+		FROM LESSON
+		WHERE LESSON_NO = #{lessonNo}
+	</select>
+	
+	<select id="getLessonList" parameterType="int" resultMap="lessonSelectMap">
+		SELECT LESSON_NO, CLASS_NO, LESSON_TITLE, LESSON_IMAGE, LESSON_INTRO, LESSON_CONTENT, LESSON_PROJECT, LESSON_VIDEO
+		FROM LESSON
+		WHERE CLASS_NO = #{hobbyClassNo}
+		ORDER BY LESSON_NO DESC
+	</select>
+	
+	<insert id="addLesson" parameterType="int">
+		INSERT INTO LESSON ( LESSON_NO, CLASS_NO )
+		VALUES ( seq_lesson_lesson_no.nextval, #{hobbyClassNo} )
+	</insert>
+	
+	<select id="getLessonNo" parameterType="int" resultType="int">
+		SELECT first.LESSON_NO LESSON_NO
+		FROM (	SELECT LESSON_NO, ROWNUM
+				FROM LESSON
+				WHERE CLASS_NO = #{hobbyClassNo}
+				ORDER BY LESSON_NO DESC
+								) first
+		WHERE ROWNUM = 1
+	
+	</select>
+	
+	<delete id="deleteLesson" parameterType="int">
+		DELETE FROM LESSON
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</delete>
+	
+	<insert id="addHashtag" parameterType="map">
+		INSERT INTO HASHTAG ( HASHTAG_NO, CLASS_NO, USER_ID, HASHTAG_CODE)
+		VALUES ( seq_hashtag_hashtag_no.nextval, #{a}, #{b}, #{c} )
+	</insert>
+	
+	<select id="getHashtag" parameterType="int" resultType="string">
+		SELECT HASHTAG_CODE
+		FROM HASHTAG
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</select>
+	
+	<update id="updateClassState" parameterType="map">
+		UPDATE HOBBYCLASS
+		<set>
+			START_DATE = SYSDATE,
+			CLASS_STATE = #{state}
+			<if test="classState == '3'">,END_DATE = SYSDATE+90</if>
+			<if test="classState == '4'">,END_DATE = SYSDATE+10</if>
+			<if test="classState == '5'">,END_DATE = SYSDATE+90</if>						
+			<if test="classState == '6'">,END_DATE = NULL</if>						
+		</set>
+		WHERE TO_CHAR(START_DATE, 'YYYYMMDD') = TO_CHAR(END_DATE, 'YYYYDDMM')
+	</update>
+	
+	<update id="updateTotalMoney" parameterType="map">
+		UPDATE HOBBYCLASS
+		<set>
+			TOTAL_MONEY = #{totalMoney}
+		</set>
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</update>
+	
+	<update id="updateTotalStudent" parameterType="map">
+		UPDATE HOBBYCLASS
+		<set>
+			TOTAL_STUDENT = #{totalStudent}
+		</set>
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</update>
+	
+	<update id="updateTotalLesson" parameterType="map">
+		UPDATE HOBBYCLASS
+		<set>
+			TOTAL_LESSON = #{totalLesson}
+		</set>
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</update>
+	
+	<select id="getTotalMoney" parameterType="int" resultType="int">
+		SELECT SUM(PRICE) TOTAL_MONEY
+		FROM PURCHASE
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</select>
+	
+	<select id="getTotalStudent" parameterType="int" resultType="int">
+		SELECT COUNT(CLASS_NO)
+		FROM PURCHASE
+		WHERE CLASS_NO = #{hobbyClassNo}
+		AND PURCHASE_CODE = '0'
+		OR PURCHASE_CODE = '1'
+		OR PURCHASE_CODE = '2'
+	</select>
+	
+	<select id="getTotalLesson" parameterType="int" resultType="int">
+		SELECT COUNT(CLASS_NO)
+		FROM LESSON
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</select>
+	
+	
+	
+	<select id="getHobbyClassListAdmin" parameterType="search" resultMap="hobbyclassSelectMap">
+		SELECT * 
+		FROM (	SELECT ROWNUM no,search_data.* 
+						FROM 	(	SELECT CLASS_NO, USER_ID, CLASS_TITLE, CLASS_IMAGE, CLASS_STATE, 
+											CLASS_INTRO, CLASS_PRICE, TOTAL_MONEY, TOTAL_LESSON, TOTAL_STUDENT, 
+											TOTAL_STEAM, START_DATE, END_DATE, CATEGORY, KIT_NAME, KIT_PRICE, KIT_IMAGE, KIT_INTRO
+										FROM HOBBYCLASS
+										
+										<if test="searchCondition == null and searchCondition == null">
+										WHERE CLASS_STATE NOT IN ('0')
+										</if>
+										<if test="searchCondition == '' and searchCondition == ''">
+										WHERE CLASS_STATE NOT IN ('0')
+										</if>
+										<if test="searchCondition !='' and searchCondition != null and searchCondition == 'hobbyClassState'">
+										WHERE CLASS_STATE = #{searchKeyword}
+										AND	CLASS_STATE NOT IN ('0')			
+											<if test="searchKeyword == '1'">
+												AND CLASS_STATE = '2'
+											</if>						
+										</if>
+										<if test="searchCondition !='' and searchCondition != null and searchCondition == 'all'">
+										WHERE (CLASS_NO LIKE '%${searchKeyword}%'
+										OR USER_ID LIKE '%${searchKeyword}%'
+										OR CLASS_TITLE LIKE '%${searchKeyword}%'
+										OR CLASS_IMAGE LIKE '%${searchKeyword}%'
+										OR CLASS_STATE LIKE '%${searchKeyword}%'
+										OR CLASS_INTRO LIKE '%${searchKeyword}%'
+										OR CLASS_PRICE LIKE '%${searchKeyword}%'
+										OR TOTAL_MONEY LIKE '%${searchKeyword}%'
+										OR TOTAL_LESSON LIKE '%${searchKeyword}%'
+										OR TOTAL_STUDENT LIKE '%${searchKeyword}%'
+										OR TOTAL_STEAM LIKE '%${searchKeyword}%'
+										OR START_DATE LIKE '%${searchKeyword}%'
+										OR END_DATE LIKE '%${searchKeyword}%'
+										OR CATEGORY LIKE '%${searchKeyword}%'
+										OR KIT_NAME LIKE '%${searchKeyword}%'
+										OR KIT_PRICE LIKE '%${searchKeyword}%'
+										OR KIT_IMAGE LIKE '%${searchKeyword}%'
+										OR KIT_INTRO LIKE '%${searchKeyword}%'
+															  <if test="searchKeyword == '심사 중'">OR CLASS_STATE LIKE '%1%'</if>
+															  <if test="searchKeyword == '심사 완료'">OR CLASS_STATE LIKE '%2%'</if>
+															  <if test="searchKeyword == '수요조사 중'">OR CLASS_STATE LIKE '%3%'</if>
+															  <if test="searchKeyword == '수요조사 완료'">OR CLASS_STATE LIKE '%4%'</if>	
+															  <if test="searchKeyword == '개강 중'">OR CLASS_STATE LIKE '%5%'</if>	
+															  <if test="searchKeyword == '종강'">OR CLASS_STATE LIKE '%6%'</if>	
+															  <if test="searchKeyword == '폐강'">OR CLASS_STATE LIKE '%7%'</if>	)
+										AND CLASS_STATE NOT IN ('0')				
+										</if>
+										
+									ORDER BY CLASS_NO DESC	) search_data
+						WHERE ROWNUM &lt;= #{endRowNum}
+						<if test="category !='' and category != null">
+							AND search_data.CLASS_STATE = #{category}
+						</if> )
+		WHERE no BETWEEN #{startRowNum} AND #{endRowNum}		
+	</select>
+	
+	<select id="getHobbyClassTotalCountAdmin" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM(	SELECT * 
+					FROM(	SELECT CLASS_NO, CLASS_STATE
+										FROM HOBBYCLASS
+										
+											<if test="totalCountHobbyClass !='' and totalCountHobbyClass != null and totalCountHobbyClass == '전체'">
+												WHERE CLASS_STATE NOT IN ('0')
+											</if>	
+											<if test="totalCountHobbyClass !='' and totalCountHobbyClass != null and totalCountHobbyClass == '심사 대기'">
+												WHERE CLASS_STATE = '1'
+												OR CLASS_STATE = '2'
+											</if>
+											<if test="totalCountHobbyClass !='' and totalCountHobbyClass != null and totalCountHobbyClass == '수요조사 중'">
+												WHERE CLASS_STATE = '3'
+											</if>
+											<if test="totalCountHobbyClass !='' and totalCountHobbyClass != null and totalCountHobbyClass == '수요조사 완료'">
+												WHERE CLASS_STATE = '4'
+											</if>
+											<if test="totalCountHobbyClass !='' and totalCountHobbyClass != null and totalCountHobbyClass == '개강 중'">
+												WHERE CLASS_STATE = '5'
+											</if>
+											<if test="totalCountHobbyClass !='' and totalCountHobbyClass != null and totalCountHobbyClass == '종강'">
+												WHERE CLASS_STATE = '6'
+											</if>
+											<if test="hobbyClassState !='' and hobbyClassState != null and hobbyClassState == 1">
+												WHERE CLASS_STATE = '1'
+											</if>
+											<if test="hobbyClassState !='' and hobbyClassState != null and hobbyClassState == 2">
+												WHERE CLASS_STATE = '2'
+											</if>
+											<if test="hobbyClassState !='' and hobbyClassState != null and hobbyClassState == 3">
+												WHERE CLASS_STATE = '3'
+											</if>
+											<if test="hobbyClassState !='' and hobbyClassState != null and hobbyClassState == 4">
+												WHERE CLASS_STATE = '4'
+											</if>
+											<if test="hobbyClassState !='' and hobbyClassState != null and hobbyClassState == 5">
+												WHERE CLASS_STATE = '5'
+											</if>
+											<if test="hobbyClassState !='' and hobbyClassState != null and hobbyClassState == 6">
+												WHERE CLASS_STATE = '6'
+											</if>
+											<if test="hobbyClassState !='' and hobbyClassState != null and hobbyClassState == 7">
+												WHERE CLASS_STATE = '7'
+											</if>
+											<if test="all !='' and all != null and all == 1">
+											WHERE (CLASS_NO LIKE '%${searchKeyword}%'
+											OR USER_ID LIKE '%${searchKeyword}%'
+											OR CLASS_TITLE LIKE '%${searchKeyword}%'
+											OR CLASS_IMAGE LIKE '%${searchKeyword}%'
+											OR CLASS_STATE LIKE '%${searchKeyword}%'
+											OR CLASS_INTRO LIKE '%${searchKeyword}%'
+											OR CLASS_PRICE LIKE '%${searchKeyword}%'
+											OR TOTAL_MONEY LIKE '%${searchKeyword}%'
+											OR TOTAL_LESSON LIKE '%${searchKeyword}%'
+											OR TOTAL_STUDENT LIKE '%${searchKeyword}%'
+											OR TOTAL_STEAM LIKE '%${searchKeyword}%'
+											OR START_DATE LIKE '%${searchKeyword}%'
+											OR END_DATE LIKE '%${searchKeyword}%'
+											OR CATEGORY LIKE '%${searchKeyword}%'
+											OR KIT_NAME LIKE '%${searchKeyword}%'
+											OR KIT_PRICE LIKE '%${searchKeyword}%'
+											OR KIT_IMAGE LIKE '%${searchKeyword}%'
+											OR KIT_INTRO LIKE '%${searchKeyword}%'
+																  <if test="searchKeyword == '심사 중'">OR CLASS_STATE LIKE '%1%'</if>
+																  <if test="searchKeyword == '심사 완료'">OR CLASS_STATE LIKE '%2%'</if>
+																  <if test="searchKeyword == '수요조사 중'">OR CLASS_STATE LIKE '%3%'</if>
+																  <if test="searchKeyword == '수요조사 완료'">OR CLASS_STATE LIKE '%4%'</if>	
+																  <if test="searchKeyword == '개강 중'">OR CLASS_STATE LIKE '%5%'</if>	
+																  <if test="searchKeyword == '종강'">OR CLASS_STATE LIKE '%6%'</if>	
+																  <if test="searchKeyword == '폐강'">OR CLASS_STATE LIKE '%7%'</if>	)
+											AND CLASS_STATE NOT IN ('0')				
+											</if>	) countTable
+											
+						<if test="category !='' and category != null">
+							WHERE CLASS_STATE = #{category}
+						</if>					
+																	) doubleStap
+						
+	</select>
+	
+	<update id="saveCheckHobbyClassAdmin" parameterType="int">
+		UPDATE HOBBYCLASS
+		<set>
+			CLASS_STATE = '2',
+			START_DATE = SYSDATE,
+			END_DATE = SYSDATE +1
+		</set>
+		WHERE CLASS_NO = #{hobbyClassNo}
+	</update>
+
+</mapper>
